@@ -1,0 +1,17 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+
+canvas {
+	background-color: #000000;
+}
+
+.nopad {
+	margin: 0;
+	padding: 0;
+}
+
+.nocursor {
+	cursor: none;
+}
