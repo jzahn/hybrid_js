@@ -25,7 +25,7 @@
         };
     }
 
-    var timer = new Hybrid.Timer();
+    var timer = new Timer();
 
     function Position(pMaxX, pMaxY) {
         var maxX = pMaxX;
@@ -129,26 +129,35 @@
         };
 
         this.render = function () {
-            var context = canvas.getContext('2d');
-
-            context.lineWidth = 5;
-
-            if (toggle) {
-                context.fillStyle = '#FF0000';
-                context.strokeStyle = '#0000FF';
-            } else {
-                context.fillStyle = '#0000FF';
-                context.strokeStyle = '#FF0000';
-            }
-
             if (visible) {
-                context.fillRect(position.getX(), position.getY(), 50, 50);
-                context.strokeRect(position.getX(), position.getY(), 50, 50);
+                var context = canvas.getContext('2d');
+                context.fillStyle = '#FFFFFF';
+                context.fillRect(position.getX(), position.getY(), 1, 1);
+
+                context.strokeStyle = '#FFFFFF';
+                context.beginPath();
+                context.moveTo(position.getX() + 0.5, position.getY() + 3 + 0.5);
+                context.lineTo(position.getX() + 0.5, position.getY() + 7 + 0.5);
+                context.stroke();
+
+                context.beginPath();
+                context.moveTo(position.getX() + 0.5, position.getY() - 3 + 0.5);
+                context.lineTo(position.getX() + 0.5, position.getY() - 7 + 0.5);
+                context.stroke();
+
+                context.beginPath();
+                context.moveTo(position.getX() + 3 + 0.5, position.getY() + 0.5);
+                context.lineTo(position.getX() + 7 + 0.5, position.getY() + 0.5);
+                context.stroke();
+
+                context.beginPath();
+                context.moveTo(position.getX() - 3 + 0.5, position.getY() + 0.5);
+                context.lineTo(position.getX() - 7 + 0.5, position.getY() + 0.5);
+                context.stroke();
             }
         };
 
         this.update = function () {
-            toggle = !toggle;
         };
     }
 
