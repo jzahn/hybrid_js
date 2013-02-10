@@ -25,7 +25,7 @@
         };
     }
 
-    var timer = new Timer();
+    var timer = new Hybrid.Timer();
 
     function Position(pMaxX, pMaxY) {
         var maxX = pMaxX;
@@ -153,6 +153,11 @@
     }
 
     var cursor = new Cursor();
+
+
+
+
+
 
     var clearCanvas = function () {
         var originalCanvasWidth = canvas.width;
