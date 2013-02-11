@@ -153,12 +153,12 @@
 
                 context.beginPath();
                 context.moveTo(position.getRenderX(), position.getRenderY() + 3);
-                context.lineTo(position.getRenderX(), position.getY() + 7);
+                context.lineTo(position.getRenderX(), position.getRenderY() + 7);
                 context.stroke();
 
                 context.beginPath();
                 context.moveTo(position.getRenderX(), position.getRenderY() - 3);
-                context.lineTo(position.getRenderX(), position.getY() - 7);
+                context.lineTo(position.getRenderX(), position.getRenderY() - 7);
                 context.stroke();
 
                 context.beginPath();
@@ -280,7 +280,7 @@
     var initialize = function () {
         initializeCanvas();
 
-        setInterval(gameLoop, 16);
+        setInterval(gameLoop, 1);
     };
 
     initialize();
