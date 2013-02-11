@@ -185,13 +185,13 @@
             context.globalAlpha = 0.75;
 
             context.beginPath();
-            context.moveTo(50 + 0.5, 0.5);
-            context.lineTo(50 + 0.5, canvas.height + 0.5);
+            context.moveTo(fixRenderCoord(50), fixRenderCoord(0));
+            context.lineTo(fixRenderCoord(50), fixRenderCoord(canvas.height));
             context.stroke();
 
             context.beginPath();
-            context.moveTo(0.5, 50 + 0.5);
-            context.lineTo(canvas.width + 0.5, 50 + 0.5);
+            context.moveTo(fixRenderCoord(0), fixRenderCoord(50));
+            context.lineTo(fixRenderCoord(canvas.width), fixRenderCoord(50));
             context.stroke();
 
             context.globalAlpha = 1;
@@ -207,9 +207,9 @@
             context.fillStyle = '#FF0000';
 
             context.beginPath();
-            context.moveTo(100.5, 100.5);
-            context.lineTo(105.5, 115.5);
-            context.lineTo(95.5, 115.5);
+            context.moveTo(fixRenderCoord(100), fixRenderCoord(100));
+            context.lineTo(fixRenderCoord(105), fixRenderCoord(115));
+            context.lineTo(fixRenderCoord(95), fixRenderCoord(115));
             context.fill();
         };
     }
