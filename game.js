@@ -3,6 +3,8 @@
 (function () {
     "use strict";
 
+    //document.getElementById("music").play();
+
     var canvas = null;
 
     function Timer() {
@@ -185,6 +187,22 @@
 
     var grid = new Grid();
 
+    function Ship() {
+        var position = new Position(10000, 10000);
+        this.render = function () {
+            var context = canvas.getContext('2d');
+            context.fillStyle = '#FF0000';
+
+            context.beginPath();
+            context.moveTo(100.5, 100.5);
+            context.lineTo(105.5, 115.5);
+            context.lineTo(95.5, 115.5);
+            context.fill();
+        };
+    }
+
+    var ship = new Ship();
+
     var clearCanvas = function () {
         var originalCanvasWidth = canvas.width;
         canvas.width = 0;
@@ -196,6 +214,7 @@
 
         performanceCounter.render();
         grid.render();
+        ship.render();
         cursor.render();
     };
 
