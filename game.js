@@ -117,7 +117,6 @@
 
     function Cursor() {
         var position = new Position(10000, 10000);
-        var toggle = true;
         var visible = false;
 
         this.setPosition = function (x, y) {
@@ -132,9 +131,11 @@
             if (visible) {
                 var context = canvas.getContext('2d');
                 context.fillStyle = '#FFFFFF';
+                context.strokeStyle = '#FFFFFF';
+                context.globalAlpha = 0.75;
+
                 context.fillRect(position.getX(), position.getY(), 1, 1);
 
-                context.strokeStyle = '#FFFFFF';
                 context.beginPath();
                 context.moveTo(position.getX() + 0.5, position.getY() + 3 + 0.5);
                 context.lineTo(position.getX() + 0.5, position.getY() + 7 + 0.5);
@@ -154,19 +155,35 @@
                 context.moveTo(position.getX() - 3 + 0.5, position.getY() + 0.5);
                 context.lineTo(position.getX() - 7 + 0.5, position.getY() + 0.5);
                 context.stroke();
-            }
-        };
 
-        this.update = function () {
+                context.globalAlpha = 1;
+            }
         };
     }
 
     var cursor = new Cursor();
 
+    function Grid() {
+        this.render = function () {
+            var context = canvas.getContext('2d');
+            context.strokeStyle = '#00FF00';
+            context.globalAlpha = 0.75;
 
+            context.beginPath();
+            context.moveTo(50 + 0.5, 0.5);
+            context.lineTo(50 + 0.5, canvas.height + 0.5);
+            context.stroke();
 
+            context.beginPath();
+            context.moveTo(0.5, 50 + 0.5);
+            context.lineTo(canvas.width + 0.5, 50 + 0.5);
+            context.stroke();
 
+            context.globalAlpha = 1;
+        };
+    }
 
+    var grid = new Grid();
 
     var clearCanvas = function () {
         var originalCanvasWidth = canvas.width;
@@ -176,12 +193,13 @@
 
     var render = function () {
         clearCanvas();
-        cursor.render();
+
         performanceCounter.render();
+        grid.render();
+        cursor.render();
     };
 
     var update = function (ticks) {
-        cursor.update(ticks);
         performanceCounter.update(ticks);
     };
 
@@ -197,6 +215,10 @@
 
     window.onresize = function () {
         resizeCanvas();
+    };
+
+    document.oncontextmenu = function () {
+        return false;
     };
 
     var onMouseMove = function (event) {
