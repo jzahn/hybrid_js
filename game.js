@@ -152,23 +152,23 @@
                 context.fillRect(position.getX(), position.getY(), 1, 1);
 
                 context.beginPath();
-                context.moveTo(position.getX() + 0.5, position.getY() + 3 + 0.5);
-                context.lineTo(position.getX() + 0.5, position.getY() + 7 + 0.5);
+                context.moveTo(position.getRenderX(), position.getRenderY() + 3);
+                context.lineTo(position.getRenderX(), position.getY() + 7);
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(position.getX() + 0.5, position.getY() - 3 + 0.5);
-                context.lineTo(position.getX() + 0.5, position.getY() - 7 + 0.5);
+                context.moveTo(position.getRenderX(), position.getRenderY() - 3);
+                context.lineTo(position.getRenderX(), position.getY() - 7);
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(position.getX() + 3 + 0.5, position.getY() + 0.5);
-                context.lineTo(position.getX() + 7 + 0.5, position.getY() + 0.5);
+                context.moveTo(position.getRenderX() + 3, position.getRenderY());
+                context.lineTo(position.getRenderX() + 7, position.getRenderY());
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(position.getX() - 3 + 0.5, position.getY() + 0.5);
-                context.lineTo(position.getX() - 7 + 0.5, position.getY() + 0.5);
+                context.moveTo(position.getRenderX() - 3, position.getRenderY());
+                context.lineTo(position.getRenderX() - 7, position.getRenderY());
                 context.stroke();
 
                 context.globalAlpha = 1;
