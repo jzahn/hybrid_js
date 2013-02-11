@@ -30,7 +30,7 @@
 
     var timer = new Timer();
 
-    var fixRenderCoord = function (pCoord) {
+    var getRenderCoord = function (pCoord) {
         return Math.round(pCoord) + 0.5;
     };
 
@@ -64,11 +64,11 @@
         };
 
         this.getRenderX = function () {
-            return fixRenderCoord(x);
+            return getRenderCoord(x);
         };
 
         this.getRenderY = function () {
-            return fixRenderCoord(y);
+            return getRenderCoord(y);
         };
 
         this.getY = function () {
@@ -152,23 +152,23 @@
                 context.fillRect(position.getX(), position.getY(), 1, 1);
 
                 context.beginPath();
-                context.moveTo(position.getRenderX(), position.getRenderY() + 3);
-                context.lineTo(position.getRenderX(), position.getRenderY() + 7);
+                context.moveTo(getRenderCoord(position.getX()), getRenderCoord(position.getY() + 3));
+                context.lineTo(getRenderCoord(position.getX()), getRenderCoord(position.getY() + 7));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(position.getRenderX(), position.getRenderY() - 3);
-                context.lineTo(position.getRenderX(), position.getRenderY() - 7);
+                context.moveTo(getRenderCoord(position.getX()), getRenderCoord(position.getY() - 3));
+                context.lineTo(getRenderCoord(position.getX()), getRenderCoord(position.getY() - 7));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(position.getRenderX() + 3, position.getRenderY());
-                context.lineTo(position.getRenderX() + 7, position.getRenderY());
+                context.moveTo(getRenderCoord(position.getX() + 3), getRenderCoord(position.getY()));
+                context.lineTo(getRenderCoord(position.getX() + 7), getRenderCoord(position.getY()));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(position.getRenderX() - 3, position.getRenderY());
-                context.lineTo(position.getRenderX() - 7, position.getRenderY());
+                context.moveTo(getRenderCoord(position.getX() - 3), getRenderCoord(position.getY()));
+                context.lineTo(getRenderCoord(position.getX() - 7), getRenderCoord(position.getY()));
                 context.stroke();
 
                 context.globalAlpha = 1;
@@ -185,13 +185,13 @@
             context.globalAlpha = 0.75;
 
             context.beginPath();
-            context.moveTo(fixRenderCoord(50), fixRenderCoord(0));
-            context.lineTo(fixRenderCoord(50), fixRenderCoord(canvas.height));
+            context.moveTo(getRenderCoord(50), getRenderCoord(0));
+            context.lineTo(getRenderCoord(50), getRenderCoord(canvas.height));
             context.stroke();
 
             context.beginPath();
-            context.moveTo(fixRenderCoord(0), fixRenderCoord(50));
-            context.lineTo(fixRenderCoord(canvas.width), fixRenderCoord(50));
+            context.moveTo(getRenderCoord(0), getRenderCoord(50));
+            context.lineTo(getRenderCoord(canvas.width), getRenderCoord(50));
             context.stroke();
 
             context.globalAlpha = 1;
@@ -208,9 +208,9 @@
             context.fillStyle = '#FF0000';
 
             context.beginPath();
-            context.moveTo(position.getRenderX(), position.getRenderY() - 10);
-            context.lineTo(position.getRenderX() + 5, position.getRenderY() + 5);
-            context.lineTo(position.getRenderX() - 5, position.getRenderY() + 5);
+            context.moveTo(getRenderCoord(position.getX()), getRenderCoord(position.getY() - 10));
+            context.lineTo(getRenderCoord(position.getX() + 5), getRenderCoord(position.getY() + 5));
+            context.lineTo(getRenderCoord(position.getX() - 5), getRenderCoord(position.getY() + 5));
             context.fill();
         };
     }
