@@ -3,6 +3,7 @@
 (function () {
     "use strict";
 
+    // WHAT THE FUCK!!!
     //document.getElementById("music").play();
 
     var canvas = null;
@@ -28,6 +29,10 @@
     }
 
     var timer = new Timer();
+
+    var fixRenderCoord = function (pCoord) {
+        return Math.round(pCoord) + 0.5;
+    };
 
     function Position(pMaxX, pMaxY) {
         var maxX = pMaxX;
@@ -56,6 +61,14 @@
 
         this.getX = function () {
             return x;
+        };
+
+        this.getRenderX = function () {
+            return fixRenderCoord(x);
+        };
+
+        this.getRenderY = function () {
+            return fixRenderCoord(y);
         };
 
         this.getY = function () {
