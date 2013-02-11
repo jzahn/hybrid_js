@@ -202,14 +202,15 @@
 
     function Ship() {
         var position = new Position(10000, 10000);
+        position.setPosition(100, 100);
         this.render = function () {
             var context = canvas.getContext('2d');
             context.fillStyle = '#FF0000';
 
             context.beginPath();
-            context.moveTo(fixRenderCoord(100), fixRenderCoord(100));
-            context.lineTo(fixRenderCoord(105), fixRenderCoord(115));
-            context.lineTo(fixRenderCoord(95), fixRenderCoord(115));
+            context.moveTo(position.getRenderX(), position.getRenderY() - 10);
+            context.lineTo(position.getRenderX() + 5, position.getRenderY() + 5);
+            context.lineTo(position.getRenderX() - 5, position.getRenderY() + 5);
             context.fill();
         };
     }
