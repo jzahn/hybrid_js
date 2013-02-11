@@ -3,8 +3,7 @@
 (function () {
     "use strict";
 
-    // WHAT THE FUCK!!!
-    //document.getElementById("music").play();
+    document.getElementById("music").play();
 
     var canvas = null;
 
