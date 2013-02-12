@@ -28,6 +28,10 @@
         this.getCanvas = function () {
             return canvas;
         };
+
+        this.getRenderCoord = function (pCoord) {
+            return Math.round(pCoord) + 0.5;
+        };
     }
 
     var graphicsManager = new GraphicsManager();
@@ -52,13 +56,13 @@
             audio.appendChild(oggSource);
         };
 
-        this.playMusic = function(pathMinusExtension) {
+        this.playMusic = function (pathMinusExtension) {
             mp3Source.setAttribute("src", pathMinusExtension + ".mp3");
 
             oggSource.setAttribute("src", pathMinusExtension + ".ogg");
 
             audio.play();
-        }
+        };
 
         this.getAudio = function () {
             return audio;
@@ -89,9 +93,9 @@
 
     var timer = new Timer();
 
-    var getRenderCoord = function (pCoord) {
+    /*var getRenderCoord = function (pCoord) {
         return Math.round(pCoord) + 0.5;
-    };
+    };*/
 
     function Position(pMaxX, pMaxY) {
         var MAX_X = pMaxX;
@@ -203,23 +207,31 @@
                 context.fillRect(position.getX(), position.getY(), 1, 1);
 
                 context.beginPath();
-                context.moveTo(getRenderCoord(position.getX()), getRenderCoord(position.getY() + 3));
-                context.lineTo(getRenderCoord(position.getX()), getRenderCoord(position.getY() + 7));
+                context.moveTo(graphicsManager.getRenderCoord(position.getX()),
+                    graphicsManager.getRenderCoord(position.getY() + 3));
+                context.lineTo(graphicsManager.getRenderCoord(position.getX()),
+                    graphicsManager.getRenderCoord(position.getY() + 7));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(getRenderCoord(position.getX()), getRenderCoord(position.getY() - 3));
-                context.lineTo(getRenderCoord(position.getX()), getRenderCoord(position.getY() - 7));
+                context.moveTo(graphicsManager.getRenderCoord(position.getX()),
+                    graphicsManager.getRenderCoord(position.getY() - 3));
+                context.lineTo(graphicsManager.getRenderCoord(position.getX()),
+                    graphicsManager.getRenderCoord(position.getY() - 7));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(getRenderCoord(position.getX() + 3), getRenderCoord(position.getY()));
-                context.lineTo(getRenderCoord(position.getX() + 7), getRenderCoord(position.getY()));
+                context.moveTo(graphicsManager.getRenderCoord(position.getX() + 3),
+                    graphicsManager.getRenderCoord(position.getY()));
+                context.lineTo(graphicsManager.getRenderCoord(position.getX() + 7),
+                    graphicsManager.getRenderCoord(position.getY()));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(getRenderCoord(position.getX() - 3), getRenderCoord(position.getY()));
-                context.lineTo(getRenderCoord(position.getX() - 7), getRenderCoord(position.getY()));
+                context.moveTo(graphicsManager.getRenderCoord(position.getX() - 3),
+                    graphicsManager.getRenderCoord(position.getY()));
+                context.lineTo(graphicsManager.getRenderCoord(position.getX() - 7),
+                    graphicsManager.getRenderCoord(position.getY()));
                 context.stroke();
 
                 context.globalAlpha = 1;
@@ -236,13 +248,17 @@
             context.globalAlpha = 0.75;
 
             context.beginPath();
-            context.moveTo(getRenderCoord(50), getRenderCoord(0));
-            context.lineTo(getRenderCoord(50), getRenderCoord(graphicsManager.getCanvas().height));
+            context.moveTo(graphicsManager.getRenderCoord(50),
+                graphicsManager.getRenderCoord(0));
+            context.lineTo(graphicsManager.getRenderCoord(50),
+                graphicsManager.getRenderCoord(graphicsManager.getCanvas().height));
             context.stroke();
 
             context.beginPath();
-            context.moveTo(getRenderCoord(0), getRenderCoord(50));
-            context.lineTo(getRenderCoord(graphicsManager.getCanvas().width), getRenderCoord(50));
+            context.moveTo(graphicsManager.getRenderCoord(0),
+                graphicsManager.getRenderCoord(50));
+            context.lineTo(graphicsManager.getRenderCoord(graphicsManager.getCanvas().width),
+                graphicsManager.getRenderCoord(50));
             context.stroke();
 
             context.globalAlpha = 1;
@@ -259,9 +275,12 @@
             context.fillStyle = '#FF0000';
 
             context.beginPath();
-            context.moveTo(getRenderCoord(position.getX()), getRenderCoord(position.getY() - 10));
-            context.lineTo(getRenderCoord(position.getX() + 5), getRenderCoord(position.getY() + 5));
-            context.lineTo(getRenderCoord(position.getX() - 5), getRenderCoord(position.getY() + 5));
+            context.moveTo(graphicsManager.getRenderCoord(position.getX()),
+                graphicsManager.getRenderCoord(position.getY() - 10));
+            context.lineTo(graphicsManager.getRenderCoord(position.getX() + 5),
+                graphicsManager.getRenderCoord(position.getY() + 5));
+            context.lineTo(graphicsManager.getRenderCoord(position.getX() - 5),
+                graphicsManager.getRenderCoord(position.getY() + 5));
             context.fill();
         };
     }
