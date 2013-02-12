@@ -3,9 +3,8 @@
 (function () {
     "use strict";
 
-    document.getElementById("music").play();
-
     var canvas = null;
+    var audio = null;
 
     function Timer() {
         var MAX_TICKS = 500;
@@ -34,40 +33,32 @@
     };
 
     function Position(pMaxX, pMaxY) {
-        var maxX = pMaxX;
-        var maxY = pMaxY;
+        var MAX_X = pMaxX;
+        var MAX_Y = pMaxY;
         var x = 0, y = 0;
 
         var boundsCheck = function () {
             var diff = 0;
 
-            if (x > maxX) {
-                diff = x - maxX;
+            if (x > MAX_X) {
+                diff = x - MAX_X;
                 x = -x + diff;
-            } else if (x < -maxX) {
-                diff = -x - maxX;
+            } else if (x < -MAX_X) {
+                diff = -x - MAX_X;
                 x = -x - diff;
             }
 
-            if (y > maxY) {
-                diff = y - maxY;
+            if (y > MAX_Y) {
+                diff = y - MAX_Y;
                 y = -y + diff;
-            } else if (y < -maxY) {
-                diff = -y - maxY;
+            } else if (y < -MAX_Y) {
+                diff = -y - MAX_Y;
                 y = -y - diff;
             }
         };
 
         this.getX = function () {
             return x;
-        };
-
-        this.getRenderX = function () {
-            return getRenderCoord(x);
-        };
-
-        this.getRenderY = function () {
-            return getRenderCoord(y);
         };
 
         this.getY = function () {
@@ -265,6 +256,14 @@
         cursor.setVisible(true);
     };
 
+    var onKeyDown = function (event) {
+        console.log("keydown");
+    };
+
+    var onKeyUp = function (event) {
+        console.log("keyup");
+    };
+
     var initializeCanvas = function () {
         canvas = document.createElement("canvas");
         canvas.className = "nopad nocursor";
@@ -272,14 +271,36 @@
 
         resizeCanvas();
 
-        canvas.addEventListener('mousemove', onMouseMove, false);
-        canvas.addEventListener('mouseout', onMouseOut, false);
-        canvas.addEventListener('mouseover', onMouseOver, false);
+        canvas.addEventListener("mousemove", onMouseMove, false);
+        canvas.addEventListener("mouseout", onMouseOut, false);
+        canvas.addEventListener("mouseover", onMouseOver, false);
+
+        document.addEventListener("keydown", onKeyDown, false);
+        document.addEventListener("keyup", onKeyUp, false);
+    };
+
+    var initializeAudio = function () {
+        audio = document.createElement("audio");
+        audio.setAttribute("loop", true);
+
+        var mp3Source = document.createElement("source");
+        mp3Source.setAttribute("src", "screamandshout.mp3");
+        mp3Source.setAttribute("type", "audio/mp3");
+
+        var oggSource = document.createElement("source");
+        oggSource.setAttribute("src", "screamandshout.ogg");
+        oggSource.setAttribute("type", "audio/ogg");
+
+        document.body.appendChild(audio);
+        audio.appendChild(mp3Source);
+        audio.appendChild(oggSource);
+
+        audio.play();
     };
 
     var initialize = function () {
         initializeCanvas();
-
+        initializeAudio();
         setInterval(gameLoop, 1);
     };
 
