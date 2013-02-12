@@ -3,8 +3,6 @@
 (function () {
     "use strict";
 
-    var audio = null;
-
     function GraphicsManager() {
         var canvas = null;
 
@@ -34,17 +32,40 @@
 
     var graphicsManager = new GraphicsManager();
 
-    /*function audioManager() {
+    function AudioManager() {
         var audio = null;
+        var mp3Source = null;
+        var oggSource = null;
 
         this.initialize = function () {
+            audio = document.createElement("audio");
+            audio.setAttribute("loop", true);
 
+            mp3Source = document.createElement("source");
+            mp3Source.setAttribute("type", "audio/mp3");
+
+            oggSource = document.createElement("source");
+            oggSource.setAttribute("type", "audio/ogg");
+
+            document.body.appendChild(audio);
+            audio.appendChild(mp3Source);
+            audio.appendChild(oggSource);
         };
+
+        this.playMusic = function(pathMinusExtension) {
+            mp3Source.setAttribute("src", pathMinusExtension + ".mp3");
+
+            oggSource.setAttribute("src", pathMinusExtension + ".ogg");
+
+            audio.play();
+        }
 
         this.getAudio = function () {
-
+            return audio;
         };
-    }*/
+    }
+
+    var audioManager = new AudioManager();
 
     function Timer() {
         var MAX_TICKS = 500;
@@ -302,31 +323,13 @@
         document.addEventListener("keyup", onKeyUp, false);
     };
 
-    var initializeAudio = function () {
-        audio = document.createElement("audio");
-        audio.setAttribute("loop", true);
-
-        var mp3Source = document.createElement("source");
-        mp3Source.setAttribute("src", "screamandshout.mp3");
-        mp3Source.setAttribute("type", "audio/mp3");
-
-        var oggSource = document.createElement("source");
-        oggSource.setAttribute("src", "screamandshout.ogg");
-        oggSource.setAttribute("type", "audio/ogg");
-
-        document.body.appendChild(audio);
-        audio.appendChild(mp3Source);
-        audio.appendChild(oggSource);
-
-        audio.play();
-    };
-
     var initializeGameLoopNoVsync = function () {
         graphicsManager.initialize();
+        audioManager.initialize();
+        audioManager.playMusic("screamandshout");
 
         initializeEventListeners();
 
-        //initializeAudio();
         setInterval(gameLoop, 1);
     };
 
