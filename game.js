@@ -3,8 +3,48 @@
 (function () {
     "use strict";
 
-    var canvas = null;
     var audio = null;
+
+    function GraphicsManager() {
+        var canvas = null;
+
+        this.resizeCanvas = function () {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+
+        this.clearCanvas = function () {
+            var originalCanvasWidth = canvas.width;
+            canvas.width = 0;
+            canvas.width = originalCanvasWidth;
+        };
+
+        this.initialize = function () {
+            canvas = document.createElement("canvas");
+            canvas.className = "nopad nocursor";
+            document.body.appendChild(canvas);
+
+            this.resizeCanvas();
+        };
+
+        this.getCanvas = function () {
+            return canvas;
+        };
+    }
+
+    var graphicsManager = new GraphicsManager();
+
+    /*function audioManager() {
+        var audio = null;
+
+        this.initialize = function () {
+
+        };
+
+        this.getAudio = function () {
+
+        };
+    }*/
 
     function Timer() {
         var MAX_TICKS = 500;
@@ -100,7 +140,7 @@
         };
 
         this.render = function () {
-            var context = canvas.getContext('2d');
+            var context = graphicsManager.getCanvas().getContext('2d');
             context.fillStyle = '#FFFFFF';
             context.font = '10pt sans-serif';
             context.textBaseline = 'top';
@@ -134,7 +174,7 @@
 
         this.render = function () {
             if (visible) {
-                var context = canvas.getContext('2d');
+                var context = graphicsManager.getCanvas().getContext('2d');
                 context.fillStyle = '#FFFFFF';
                 context.strokeStyle = '#FFFFFF';
                 context.globalAlpha = 0.75;
@@ -170,18 +210,18 @@
 
     function Grid() {
         this.render = function () {
-            var context = canvas.getContext('2d');
+            var context = graphicsManager.getCanvas().getContext('2d');
             context.strokeStyle = '#00FF00';
             context.globalAlpha = 0.75;
 
             context.beginPath();
             context.moveTo(getRenderCoord(50), getRenderCoord(0));
-            context.lineTo(getRenderCoord(50), getRenderCoord(canvas.height));
+            context.lineTo(getRenderCoord(50), getRenderCoord(graphicsManager.getCanvas().height));
             context.stroke();
 
             context.beginPath();
             context.moveTo(getRenderCoord(0), getRenderCoord(50));
-            context.lineTo(getRenderCoord(canvas.width), getRenderCoord(50));
+            context.lineTo(getRenderCoord(graphicsManager.getCanvas().width), getRenderCoord(50));
             context.stroke();
 
             context.globalAlpha = 1;
@@ -194,7 +234,7 @@
         var position = new Position(10000, 10000);
         position.setPosition(100, 100);
         this.render = function () {
-            var context = canvas.getContext('2d');
+            var context = graphicsManager.getCanvas().getContext('2d');
             context.fillStyle = '#FF0000';
 
             context.beginPath();
@@ -207,14 +247,8 @@
 
     var ship = new Ship();
 
-    var clearCanvas = function () {
-        var originalCanvasWidth = canvas.width;
-        canvas.width = 0;
-        canvas.width = originalCanvasWidth;
-    };
-
     var render = function () {
-        clearCanvas();
+        graphicsManager.clearCanvas();
 
         performanceCounter.render();
         grid.render();
@@ -231,13 +265,8 @@
         render();
     };
 
-    var resizeCanvas = function () {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    };
-
     window.onresize = function () {
-        resizeCanvas();
+        graphicsManager.resizeCanvas();
     };
 
     document.oncontextmenu = function () {
@@ -264,16 +293,10 @@
         console.log("keyup");
     };
 
-    var initializeCanvas = function () {
-        canvas = document.createElement("canvas");
-        canvas.className = "nopad nocursor";
-        document.body.appendChild(canvas);
-
-        resizeCanvas();
-
-        canvas.addEventListener("mousemove", onMouseMove, false);
-        canvas.addEventListener("mouseout", onMouseOut, false);
-        canvas.addEventListener("mouseover", onMouseOver, false);
+    var initializeEventListeners = function () {
+        graphicsManager.getCanvas().addEventListener("mousemove", onMouseMove, false);
+        graphicsManager.getCanvas().addEventListener("mouseout", onMouseOut, false);
+        graphicsManager.getCanvas().addEventListener("mouseover", onMouseOver, false);
 
         document.addEventListener("keydown", onKeyDown, false);
         document.addEventListener("keyup", onKeyUp, false);
@@ -298,12 +321,15 @@
         audio.play();
     };
 
-    var initialize = function () {
-        initializeCanvas();
-        initializeAudio();
+    var initializeGameLoopNoVsync = function () {
+        graphicsManager.initialize();
+
+        initializeEventListeners();
+
+        //initializeAudio();
         setInterval(gameLoop, 1);
     };
 
-    initialize();
+    initializeGameLoopNoVsync();
 
 }());
