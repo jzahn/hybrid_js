@@ -93,10 +93,6 @@
 
     var timer = new Timer();
 
-    /*var getRenderCoord = function (pCoord) {
-        return Math.round(pCoord) + 0.5;
-    };*/
-
     function Position(pMaxX, pMaxY) {
         var MAX_X = pMaxX;
         var MAX_Y = pMaxY;
