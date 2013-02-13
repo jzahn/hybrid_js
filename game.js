@@ -176,7 +176,7 @@
         this.update = function (ticks) {
             tickSum += ticks;
             frames++;
-            if (tickSum > 1000) {
+            if (tickSum >= 1000) {
                 fps = frames;
                 frames = 0;
                 tickSum = 0;
@@ -302,7 +302,31 @@
         performanceCounter.update(ticks);
     };
 
-    var gameLoop = function () {
+    var vSyncWait = (function (callback) {
+        return  window.requestAnimationFrame       ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame    ||
+                window.oRequestAnimationFrame      ||
+                window.msRequestAnimationFrame     ||
+                function (callback) {
+                    window.setTimeout(callback, 1000/60);
+                };
+    }());
+
+    var noVSyncWait = function (callback) {
+        window.setTimeout(callback, 1);
+    };
+
+    var doWait = function (callback, vSync) {
+        if (vSync) {
+            vSyncWait(callback);
+        } else {
+            noVSyncWait(callback)
+        }
+    };
+
+    var gameLoop = function (vSync) {
+        doWait(gameLoop, vSync);
         update(timer.tick());
         render();
     };
@@ -335,25 +359,40 @@
         console.log("keyup");
     };
 
+    var onMouseDown = function (event) {
+        console.log("mousedown");
+    };
+
+    var onMouseUp = function (event) {
+        console.log("mouseup");
+    };
+
+    var onMouseWheel = function (event) {
+        console.log("mousewheel");
+    };
+
     var initializeEventListeners = function () {
         graphicsManager.getCanvas().addEventListener("mousemove", onMouseMove, false);
         graphicsManager.getCanvas().addEventListener("mouseout", onMouseOut, false);
         graphicsManager.getCanvas().addEventListener("mouseover", onMouseOver, false);
+        graphicsManager.getCanvas().addEventListener("mousedown", onMouseDown, false);
+        graphicsManager.getCanvas().addEventListener("mouseup", onMouseUp, false);
+        graphicsManager.getCanvas().addEventListener("mousewheel", onMouseWheel, false);
 
         document.addEventListener("keydown", onKeyDown, false);
         document.addEventListener("keyup", onKeyUp, false);
     };
 
-    var initializeGameLoopNoVsync = function () {
+    var initializeGameLoop = function () {
         graphicsManager.initialize();
         audioManager.initialize();
-        audioManager.playMusic("screamandshout");
-
         initializeEventListeners();
 
-        setInterval(gameLoop, 1);
+        audioManager.playMusic("screamandshout");
+
+        gameLoop(true);
     };
 
-    initializeGameLoopNoVsync();
+    initializeGameLoop();
 
 }());
