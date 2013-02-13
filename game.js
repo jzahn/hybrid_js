@@ -29,12 +29,7 @@
             return canvas;
         };
 
-        this.getWorldRenderCoord = function (pCoord) {
-            return Math.round(pCoord) + 0.5;
-        };
-
-        // TODO need to rethink this since X and Y are not done the same
-        this.getUIRenderCoord = function (pCoord) {
+        this.fixRenderCoord = function (pCoord) {
             return Math.round(pCoord) + 0.5;
         };
     }
@@ -208,31 +203,31 @@
                 context.fillRect(position.getX(), position.getY(), 1, 1);
 
                 context.beginPath();
-                context.moveTo(graphicsManager.getWorldRenderCoord(position.getX()),
-                    graphicsManager.getWorldRenderCoord(position.getY() + 3));
-                context.lineTo(graphicsManager.getWorldRenderCoord(position.getX()),
-                    graphicsManager.getWorldRenderCoord(position.getY() + 7));
+                context.moveTo(graphicsManager.fixRenderCoord(position.getX()),
+                    graphicsManager.fixRenderCoord(position.getY() + 3));
+                context.lineTo(graphicsManager.fixRenderCoord(position.getX()),
+                    graphicsManager.fixRenderCoord(position.getY() + 7));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(graphicsManager.getWorldRenderCoord(position.getX()),
-                    graphicsManager.getWorldRenderCoord(position.getY() - 3));
-                context.lineTo(graphicsManager.getWorldRenderCoord(position.getX()),
-                    graphicsManager.getWorldRenderCoord(position.getY() - 7));
+                context.moveTo(graphicsManager.fixRenderCoord(position.getX()),
+                    graphicsManager.fixRenderCoord(position.getY() - 3));
+                context.lineTo(graphicsManager.fixRenderCoord(position.getX()),
+                    graphicsManager.fixRenderCoord(position.getY() - 7));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(graphicsManager.getWorldRenderCoord(position.getX() + 3),
-                    graphicsManager.getWorldRenderCoord(position.getY()));
-                context.lineTo(graphicsManager.getWorldRenderCoord(position.getX() + 7),
-                    graphicsManager.getWorldRenderCoord(position.getY()));
+                context.moveTo(graphicsManager.fixRenderCoord(position.getX() + 3),
+                    graphicsManager.fixRenderCoord(position.getY()));
+                context.lineTo(graphicsManager.fixRenderCoord(position.getX() + 7),
+                    graphicsManager.fixRenderCoord(position.getY()));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(graphicsManager.getWorldRenderCoord(position.getX() - 3),
-                    graphicsManager.getWorldRenderCoord(position.getY()));
-                context.lineTo(graphicsManager.getWorldRenderCoord(position.getX() - 7),
-                    graphicsManager.getWorldRenderCoord(position.getY()));
+                context.moveTo(graphicsManager.fixRenderCoord(position.getX() - 3),
+                    graphicsManager.fixRenderCoord(position.getY()));
+                context.lineTo(graphicsManager.fixRenderCoord(position.getX() - 7),
+                    graphicsManager.fixRenderCoord(position.getY()));
                 context.stroke();
 
                 context.globalAlpha = 1;
@@ -249,17 +244,17 @@
             context.globalAlpha = 0.75;
 
             context.beginPath();
-            context.moveTo(graphicsManager.getWorldRenderCoord(50),
-                graphicsManager.getWorldRenderCoord(0));
-            context.lineTo(graphicsManager.getWorldRenderCoord(50),
-                graphicsManager.getWorldRenderCoord(graphicsManager.getCanvas().height));
+            context.moveTo(graphicsManager.fixRenderCoord(50),
+                graphicsManager.fixRenderCoord(0));
+            context.lineTo(graphicsManager.fixRenderCoord(50),
+                graphicsManager.fixRenderCoord(graphicsManager.getCanvas().height));
             context.stroke();
 
             context.beginPath();
-            context.moveTo(graphicsManager.getWorldRenderCoord(0),
-                graphicsManager.getWorldRenderCoord(50));
-            context.lineTo(graphicsManager.getWorldRenderCoord(graphicsManager.getCanvas().width),
-                graphicsManager.getWorldRenderCoord(50));
+            context.moveTo(graphicsManager.fixRenderCoord(0),
+                graphicsManager.fixRenderCoord(50));
+            context.lineTo(graphicsManager.fixRenderCoord(graphicsManager.getCanvas().width),
+                graphicsManager.fixRenderCoord(50));
             context.stroke();
 
             context.globalAlpha = 1;
@@ -277,12 +272,12 @@
             context.fillStyle = '#FF0000';
 
             context.beginPath();
-            context.moveTo(graphicsManager.getWorldRenderCoord(position.getX()),
-                graphicsManager.getWorldRenderCoord(position.getY() - 10));
-            context.lineTo(graphicsManager.getWorldRenderCoord(position.getX() + 5),
-                graphicsManager.getWorldRenderCoord(position.getY() + 5));
-            context.lineTo(graphicsManager.getWorldRenderCoord(position.getX() - 5),
-                graphicsManager.getWorldRenderCoord(position.getY() + 5));
+            context.moveTo(graphicsManager.fixRenderCoord(position.getX()),
+                graphicsManager.fixRenderCoord(position.getY() - 10));
+            context.lineTo(graphicsManager.fixRenderCoord(position.getX() + 5),
+                graphicsManager.fixRenderCoord(position.getY() + 5));
+            context.lineTo(graphicsManager.fixRenderCoord(position.getX() - 5),
+                graphicsManager.fixRenderCoord(position.getY() + 5));
             context.fill();
         };
     }
@@ -303,14 +298,14 @@
     };
 
     var vSyncWait = (function (callback) {
-        return  window.requestAnimationFrame       ||
+        return window.requestAnimationFrame       ||
                 window.webkitRequestAnimationFrame ||
                 window.mozRequestAnimationFrame    ||
                 window.oRequestAnimationFrame      ||
                 window.msRequestAnimationFrame     ||
                 function (callback) {
-                    window.setTimeout(callback, 1000/60);
-                };
+                window.setTimeout(callback, 1000 / 60);
+            };
     }());
 
     var noVSyncWait = function (callback) {
@@ -321,14 +316,14 @@
         if (vSync) {
             vSyncWait(callback);
         } else {
-            noVSyncWait(callback)
+            noVSyncWait(callback);
         }
     };
 
     var gameLoop = function (vSync) {
-        doWait(gameLoop, vSync);
         update(timer.tick());
         render();
+        doWait(gameLoop, vSync);
     };
 
     window.onresize = function () {
