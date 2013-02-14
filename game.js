@@ -163,6 +163,7 @@
     function Camera() {
         var position = new Position(10000, 10000);
         var scale = 1;
+        var activeObject = null;
 
         this.setPosition = function (pX, pY) {
             position.set(pX, pY);
@@ -176,19 +177,15 @@
             return position.getY();
         };
 
-        this.update = function () {
-            if (inputManager.vk_w) {
-                position.setPosition(position.getX(), position.getY() + 1);
+        this.update = function (ticks) {
+            if (activeObject) {
+                position.setPosition(activeObject.getPosition().getX(),
+                    activeObject.getPosition().getY());
             }
-            if (inputManager.vk_s) {
-                position.setPosition(position.getX(), position.getY() - 1);
-            }
-            if (inputManager.vk_d) {
-                position.setPosition(position.getX() + 1, position.getY());
-            }
-            if (inputManager.vk_a) {
-                position.setPosition(position.getX() - 1, position.getY());
-            }
+        };
+
+        this.setActiveObject = function (pActiveObject) {
+            activeObject = pActiveObject;
         };
     }
 
@@ -295,15 +292,15 @@
 
             context.beginPath();
             context.moveTo(graphicsManager.fixRenderCoord(50 + camera.getX()),
-                graphicsManager.fixRenderCoord(0 + camera.getY()));
+                graphicsManager.fixRenderCoord(0));
             context.lineTo(graphicsManager.fixRenderCoord(50 + camera.getX()),
-                graphicsManager.fixRenderCoord(graphicsManager.getCanvas().height + camera.getY()));
+                graphicsManager.fixRenderCoord(graphicsManager.getCanvas().height));
             context.stroke();
 
             context.beginPath();
-            context.moveTo(graphicsManager.fixRenderCoord(0 + camera.getX()),
+            context.moveTo(graphicsManager.fixRenderCoord(0),
                 graphicsManager.fixRenderCoord(50 + camera.getY()));
-            context.lineTo(graphicsManager.fixRenderCoord(graphicsManager.getCanvas().width + camera.getX()),
+            context.lineTo(graphicsManager.fixRenderCoord(graphicsManager.getCanvas().width),
                 graphicsManager.fixRenderCoord(50 + camera.getY()));
             context.stroke();
 
@@ -330,6 +327,25 @@
                 graphicsManager.fixRenderCoord(position.getY() + 5));
             context.fill();
         };
+
+        this.update = function (ticks) {
+            if (inputManager.vk_w) {
+                position.setPosition(position.getX() , position.getY() + 2 * (ticks / 16));
+            }
+            if (inputManager.vk_s) {
+                position.setPosition(position.getX(), position.getY() - 2 * (ticks / 16));
+            }
+            if (inputManager.vk_d) {
+                position.setPosition(position.getX() + 2 * (ticks / 16), position.getY());
+            }
+            if (inputManager.vk_a) {
+                position.setPosition(position.getX() - 2 * (ticks / 16), position.getY());
+            }
+        };
+
+        this.getPosition = function () {
+            return position;
+        }
     }
 
     var ship = new Ship();
@@ -345,7 +361,8 @@
 
     var update = function (ticks) {
         performanceCounter.update(ticks);
-        camera.update();
+        ship.update(ticks)
+        camera.update(ticks);
     };
 
     var vSyncWait = (function (callback) {
@@ -453,6 +470,7 @@
         audioManager.initialize();
         initializeEventListeners();
 
+        camera.setActiveObject(ship);
         //audioManager.playMusic("screamandshout");
 
         gameLoop(true);
