@@ -58,9 +58,7 @@
 
         this.playMusic = function (pathMinusExtension) {
             mp3Source.setAttribute("src", pathMinusExtension + ".mp3");
-
             oggSource.setAttribute("src", pathMinusExtension + ".ogg");
-
             audio.play();
         };
 
@@ -70,6 +68,35 @@
     }
 
     var audioManager = new AudioManager();
+
+    function InputManager() {
+        this.vk_w = false;
+        this.vk_a = false;
+        this.vk_s = false;
+        this.vk_d = false;
+        this.vk_space = false;
+        this.vk_ctl = false;
+        this.vk_tab = false;
+        this.vk_shift = false;
+        this.vk_tilde = false;
+
+        this.vk_1 = false;
+        this.vk_2 = false;
+        this.vk_3 = false;
+        this.vk_4 = false;
+        this.vk_5 = false;
+        this.vk_6 = false;
+        this.vk_7 = false;
+        this.vk_8 = false;
+        this.vk_9 = false;
+        this.vk_0 = false;
+
+        this.mouse1 = false;
+        this.mouse2 = false;
+        this.mouse3 = false;
+    }
+
+    var inputManager = new InputManager();
 
     function Timer() {
         var MAX_TICKS = 500;
@@ -135,9 +162,33 @@
 
     function Camera() {
         var position = new Position(10000, 10000);
+        var scale = 1;
 
         this.setPosition = function (pX, pY) {
             position.set(pX, pY);
+        };
+
+        this.getX = function () {
+            return position.getX();
+        };
+
+        this.getY = function () {
+            return position.getY();
+        };
+
+        this.update = function () {
+            if (inputManager.vk_w) {
+                position.setPosition(position.getX(), position.getY() + 1);
+            }
+            if (inputManager.vk_s) {
+                position.setPosition(position.getX(), position.getY() - 1);
+            }
+            if (inputManager.vk_d) {
+                position.setPosition(position.getX() + 1, position.getY());
+            }
+            if (inputManager.vk_a) {
+                position.setPosition(position.getX() - 1, position.getY());
+            }
         };
     }
 
@@ -148,7 +199,6 @@
         position.setPosition(10, 10);
         var visible = true;
         var tickSum = 0;
-
         var fps = 0;
         var frames = 0;
 
@@ -244,17 +294,17 @@
             context.globalAlpha = 0.75;
 
             context.beginPath();
-            context.moveTo(graphicsManager.fixRenderCoord(50),
-                graphicsManager.fixRenderCoord(0));
-            context.lineTo(graphicsManager.fixRenderCoord(50),
-                graphicsManager.fixRenderCoord(graphicsManager.getCanvas().height));
+            context.moveTo(graphicsManager.fixRenderCoord(50 + camera.getX()),
+                graphicsManager.fixRenderCoord(0 + camera.getY()));
+            context.lineTo(graphicsManager.fixRenderCoord(50 + camera.getX()),
+                graphicsManager.fixRenderCoord(graphicsManager.getCanvas().height + camera.getY()));
             context.stroke();
 
             context.beginPath();
-            context.moveTo(graphicsManager.fixRenderCoord(0),
-                graphicsManager.fixRenderCoord(50));
-            context.lineTo(graphicsManager.fixRenderCoord(graphicsManager.getCanvas().width),
-                graphicsManager.fixRenderCoord(50));
+            context.moveTo(graphicsManager.fixRenderCoord(0 + camera.getX()),
+                graphicsManager.fixRenderCoord(50 + camera.getY()));
+            context.lineTo(graphicsManager.fixRenderCoord(graphicsManager.getCanvas().width + camera.getX()),
+                graphicsManager.fixRenderCoord(50 + camera.getY()));
             context.stroke();
 
             context.globalAlpha = 1;
@@ -295,10 +345,11 @@
 
     var update = function (ticks) {
         performanceCounter.update(ticks);
+        camera.update();
     };
 
     var vSyncWait = (function (callback) {
-        return window.requestAnimationFrame       ||
+        return window.requestAnimationFrame        ||
                 window.webkitRequestAnimationFrame ||
                 window.mozRequestAnimationFrame    ||
                 window.oRequestAnimationFrame      ||
@@ -347,11 +398,30 @@
     };
 
     var onKeyDown = function (event) {
-        console.log("keydown");
+        console.log("keydown: " + event.keyCode);
+        if (event.keyCode === 87) {
+            inputManager.vk_w = true;
+        } else if (event.keyCode === 65) {
+            inputManager.vk_a = true;
+        } else if (event.keyCode === 68) {
+            inputManager.vk_d = true;
+        } else if (event.keyCode === 83) {
+            inputManager.vk_s = true;
+        }
     };
 
     var onKeyUp = function (event) {
-        console.log("keyup");
+        console.log("keyup: " + event.keyCode);
+
+        if (event.keyCode === 87) {
+            inputManager.vk_w = false;
+        } else if (event.keyCode === 65) {
+            inputManager.vk_a = false;
+        } else if (event.keyCode === 68) {
+            inputManager.vk_d = false;
+        } else if (event.keyCode === 83) {
+            inputManager.vk_s = false;
+        }
     };
 
     var onMouseDown = function (event) {
@@ -383,7 +453,7 @@
         audioManager.initialize();
         initializeEventListeners();
 
-        audioManager.playMusic("screamandshout");
+        //audioManager.playMusic("screamandshout");
 
         gameLoop(true);
     };
