@@ -230,8 +230,6 @@
         };
     }
 
-    var performanceCounter = new PerformanceCounter();
-
     function Cursor() {
         var position = new Position(10000, 10000);
         var visible = false;
@@ -286,7 +284,25 @@
         };
     }
 
-    var cursor = new Cursor();
+    function UserInterface() {
+        var cursor = new Cursor();
+        var performanceCounter = new PerformanceCounter();
+
+        this.update = function (ticks) {
+            performanceCounter.update(ticks)
+        };
+
+        this.render = function () {
+            performanceCounter.render()
+            cursor.render();
+        };
+
+        this.getCursor = function () {
+            return cursor;
+        };
+    };
+
+    var userInterface = new UserInterface();
 
     function Grid() {
         this.render = function () {
@@ -360,14 +376,15 @@
     var render = function () {
         graphicsManager.clearCanvas();
 
-        performanceCounter.render();
         grid.render();
         ship.render();
-        cursor.render();
+
+        userInterface.render();
     };
 
     var update = function (ticks) {
-        performanceCounter.update(ticks);
+        userInterface.update(ticks);
+
         ship.update(ticks);
         camera.update(ticks);
     };
@@ -410,15 +427,15 @@
     };
 
     var onMouseMove = function (event) {
-        cursor.setPosition(event.clientX, event.clientY);
+        userInterface.getCursor().setPosition(event.clientX, event.clientY);
     };
 
     var onMouseOut = function () {
-        cursor.setVisible(false);
+        userInterface.getCursor().setVisible(false);
     };
 
     var onMouseOver = function () {
-        cursor.setVisible(true);
+        userInterface.getCursor().setVisible(true);
     };
 
     var onKeyDown = function (event) {
