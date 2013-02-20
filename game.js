@@ -187,6 +187,10 @@
         this.setActiveObject = function (pActiveObject) {
             activeObject = pActiveObject;
         };
+
+        this.getScale = function () {
+            return scale;
+        };
     }
 
     var camera = new Camera();
@@ -286,7 +290,10 @@
 
     function Grid() {
         this.render = function () {
+            var halfScreenWidth = (graphicsManager.getCanvas().width / 2) / camera.getScale();
+            var halfScreenHeight = (graphicsManager.getCanvas().height / 2) / camera.getScale();
             var context = graphicsManager.getCanvas().getContext('2d');
+
             context.strokeStyle = '#00FF00';
             context.globalAlpha = 0.75;
 
@@ -330,7 +337,7 @@
 
         this.update = function (ticks) {
             if (inputManager.vk_w) {
-                position.setPosition(position.getX() , position.getY() + 2 * (ticks / 16));
+                position.setPosition(position.getX(), position.getY() + 2 * (ticks / 16));
             }
             if (inputManager.vk_s) {
                 position.setPosition(position.getX(), position.getY() - 2 * (ticks / 16));
@@ -345,7 +352,7 @@
 
         this.getPosition = function () {
             return position;
-        }
+        };
     }
 
     var ship = new Ship();
@@ -361,7 +368,7 @@
 
     var update = function (ticks) {
         performanceCounter.update(ticks);
-        ship.update(ticks)
+        ship.update(ticks);
         camera.update(ticks);
     };
 
@@ -389,9 +396,9 @@
     };
 
     var gameLoop = function (vSync) {
+        doWait(gameLoop, vSync);
         update(timer.tick());
         render();
-        doWait(gameLoop, vSync);
     };
 
     window.onresize = function () {
@@ -471,7 +478,7 @@
         initializeEventListeners();
 
         camera.setActiveObject(ship);
-        //audioManager.playMusic("screamandshout");
+        audioManager.playMusic("screamandshout");
 
         gameLoop(true);
     };
