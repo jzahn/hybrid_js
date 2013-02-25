@@ -29,8 +29,18 @@
             return canvas;
         };
 
-        this.fixRenderCoord = function (pCoord) {
+        this.fixPixelCoord = function (pCoord) {
             return Math.round(pCoord) + 0.5;
+        };
+
+        this.setGameTransform = function () {
+            var context = canvas.getContext('2d');
+            context.setTransform(1, 0, 0, -1, 0, 0);
+        };
+
+        this.setUiTransform = function () {
+            var context = canvas.getContext('2d');
+            context.setTransform(1, 0, 0, 1, 0, 0);
         };
     }
 
@@ -164,6 +174,8 @@
         var position = new Position(10000, 10000);
         var scale = 1;
         var activeObject = null;
+        var MIN_SCALE = 0.3;
+        var MAX_SCALE = 5;
 
         this.setPosition = function (pX, pY) {
             position.set(pX, pY);
@@ -190,6 +202,21 @@
 
         this.getScale = function () {
             return scale;
+        };
+
+        this.setScale = function (pScale) {
+            if (pScale >= MIN_SCALE && pScale <= MAX_SCALE) {
+                scale = pScale;
+            }
+        };
+
+        this.doTransform = function () {
+            var context = graphicsManager.getCanvas().getContext("2d");
+            var halfScreenWidth = graphicsManager.getCanvas().width / 2;
+            var halfScreenHeight = graphicsManager.getCanvas().height / 2;
+            context.translate(halfScreenWidth - position.getX(),
+                -halfScreenHeight - position.getY());
+            context.scale(scale, scale);
         };
     }
 
@@ -245,6 +272,7 @@
         this.render = function () {
             if (visible) {
                 var context = graphicsManager.getCanvas().getContext('2d');
+
                 context.fillStyle = '#FFFFFF';
                 context.strokeStyle = '#FFFFFF';
                 context.globalAlpha = 0.75;
@@ -252,31 +280,31 @@
                 context.fillRect(position.getX(), position.getY(), 1, 1);
 
                 context.beginPath();
-                context.moveTo(graphicsManager.fixRenderCoord(position.getX()),
-                    graphicsManager.fixRenderCoord(position.getY() + 3));
-                context.lineTo(graphicsManager.fixRenderCoord(position.getX()),
-                    graphicsManager.fixRenderCoord(position.getY() + 7));
+                context.moveTo(graphicsManager.fixPixelCoord(position.getX()),
+                    graphicsManager.fixPixelCoord(position.getY() + 3));
+                context.lineTo(graphicsManager.fixPixelCoord(position.getX()),
+                    graphicsManager.fixPixelCoord(position.getY() + 7));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(graphicsManager.fixRenderCoord(position.getX()),
-                    graphicsManager.fixRenderCoord(position.getY() - 3));
-                context.lineTo(graphicsManager.fixRenderCoord(position.getX()),
-                    graphicsManager.fixRenderCoord(position.getY() - 7));
+                context.moveTo(graphicsManager.fixPixelCoord(position.getX()),
+                    graphicsManager.fixPixelCoord(position.getY() - 3));
+                context.lineTo(graphicsManager.fixPixelCoord(position.getX()),
+                    graphicsManager.fixPixelCoord(position.getY() - 7));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(graphicsManager.fixRenderCoord(position.getX() + 3),
-                    graphicsManager.fixRenderCoord(position.getY()));
-                context.lineTo(graphicsManager.fixRenderCoord(position.getX() + 7),
-                    graphicsManager.fixRenderCoord(position.getY()));
+                context.moveTo(graphicsManager.fixPixelCoord(position.getX() + 3),
+                    graphicsManager.fixPixelCoord(position.getY()));
+                context.lineTo(graphicsManager.fixPixelCoord(position.getX() + 7),
+                    graphicsManager.fixPixelCoord(position.getY()));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(graphicsManager.fixRenderCoord(position.getX() - 3),
-                    graphicsManager.fixRenderCoord(position.getY()));
-                context.lineTo(graphicsManager.fixRenderCoord(position.getX() - 7),
-                    graphicsManager.fixRenderCoord(position.getY()));
+                context.moveTo(graphicsManager.fixPixelCoord(position.getX() - 3),
+                    graphicsManager.fixPixelCoord(position.getY()));
+                context.lineTo(graphicsManager.fixPixelCoord(position.getX() - 7),
+                    graphicsManager.fixPixelCoord(position.getY()));
                 context.stroke();
 
                 context.globalAlpha = 1;
@@ -289,42 +317,42 @@
         var performanceCounter = new PerformanceCounter();
 
         this.update = function (ticks) {
-            performanceCounter.update(ticks)
+            performanceCounter.update(ticks);
         };
 
         this.render = function () {
-            performanceCounter.render()
+            performanceCounter.render();
             cursor.render();
         };
 
         this.getCursor = function () {
             return cursor;
         };
-    };
+    }
 
     var userInterface = new UserInterface();
 
     function Grid() {
         this.render = function () {
-            var halfScreenWidth = (graphicsManager.getCanvas().width / 2) / camera.getScale();
-            var halfScreenHeight = (graphicsManager.getCanvas().height / 2) / camera.getScale();
+            var halfScreenWidth = (graphicsManager.getCanvas().width / 2);// / camera.getScale();
+            var halfScreenHeight = (graphicsManager.getCanvas().height / 2);// / camera.getScale();
             var context = graphicsManager.getCanvas().getContext('2d');
 
             context.strokeStyle = '#00FF00';
             context.globalAlpha = 0.75;
 
             context.beginPath();
-            context.moveTo(graphicsManager.fixRenderCoord(50 + camera.getX()),
-                graphicsManager.fixRenderCoord(0));
-            context.lineTo(graphicsManager.fixRenderCoord(50 + camera.getX()),
-                graphicsManager.fixRenderCoord(graphicsManager.getCanvas().height));
+            context.moveTo(graphicsManager.fixPixelCoord(-halfScreenWidth),
+                graphicsManager.fixPixelCoord(0));
+            context.lineTo(graphicsManager.fixPixelCoord(halfScreenWidth),
+                graphicsManager.fixPixelCoord(0));
             context.stroke();
 
             context.beginPath();
-            context.moveTo(graphicsManager.fixRenderCoord(0),
-                graphicsManager.fixRenderCoord(50 + camera.getY()));
-            context.lineTo(graphicsManager.fixRenderCoord(graphicsManager.getCanvas().width),
-                graphicsManager.fixRenderCoord(50 + camera.getY()));
+            context.moveTo(graphicsManager.fixPixelCoord(0),
+                graphicsManager.fixPixelCoord(halfScreenHeight));
+            context.lineTo(graphicsManager.fixPixelCoord(0),
+                graphicsManager.fixPixelCoord(-halfScreenHeight));
             context.stroke();
 
             context.globalAlpha = 1;
@@ -335,19 +363,19 @@
 
     function Ship() {
         var position = new Position(10000, 10000);
-        position.setPosition(100, 100);
+        position.setPosition(0, 0);
 
         this.render = function () {
             var context = graphicsManager.getCanvas().getContext('2d');
             context.fillStyle = '#FF0000';
 
             context.beginPath();
-            context.moveTo(graphicsManager.fixRenderCoord(position.getX()),
-                graphicsManager.fixRenderCoord(position.getY() - 10));
-            context.lineTo(graphicsManager.fixRenderCoord(position.getX() + 5),
-                graphicsManager.fixRenderCoord(position.getY() + 5));
-            context.lineTo(graphicsManager.fixRenderCoord(position.getX() - 5),
-                graphicsManager.fixRenderCoord(position.getY() + 5));
+            context.moveTo(graphicsManager.fixPixelCoord(position.getX()),
+                graphicsManager.fixPixelCoord(position.getY() + 10));
+            context.lineTo(graphicsManager.fixPixelCoord(position.getX() + 5),
+                graphicsManager.fixPixelCoord(position.getY() - 5));
+            context.lineTo(graphicsManager.fixPixelCoord(position.getX() - 5),
+                graphicsManager.fixPixelCoord(position.getY() - 5));
             context.fill();
         };
 
@@ -376,8 +404,12 @@
     var render = function () {
         graphicsManager.clearCanvas();
 
+        graphicsManager.setGameTransform();
+        camera.doTransform();
         grid.render();
         ship.render();
+
+        graphicsManager.setUiTransform();
 
         userInterface.render();
     };
@@ -474,7 +506,13 @@
     };
 
     var onMouseWheel = function (event) {
-        console.log("mousewheel");
+        var delta = event.wheelDelta;
+        console.log(delta);
+        if (delta > 0) {
+            camera.setScale(camera.getScale() + 0.1);
+        } else {
+            camera.setScale(camera.getScale() - 0.1);
+        }
     };
 
     var initializeEventListeners = function () {
