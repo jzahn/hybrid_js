@@ -34,12 +34,12 @@
         };
 
         this.setGameTransform = function () {
-            var context = canvas.getContext('2d');
+            var context = canvas.getContext("2d");
             context.setTransform(1, 0, 0, -1, 0, 0);
         };
 
         this.setUiTransform = function () {
-            var context = canvas.getContext('2d');
+            var context = canvas.getContext("2d");
             context.setTransform(1, 0, 0, 1, 0, 0);
         };
     }
@@ -104,6 +104,11 @@
         this.mouse1 = false;
         this.mouse2 = false;
         this.mouse3 = false;
+        this.mouseWheel = 0;
+
+        this.reset = function () {
+            this.mouseWheel = 0;
+        };
     }
 
     var inputManager = new InputManager();
@@ -170,12 +175,36 @@
         };
     }
 
+    function Heading() {
+        var angle = 0;
+
+        var boundsCheck = function () {
+            if (angle < 0 || angle >= 360) {
+                angle %= 360;
+            }
+        };
+
+        this.getHeading = function () {
+            return angle;
+        };
+
+        this.setHeading = function (pAngle) {
+            angle = pAngle;
+            boundsCheck();
+        };
+
+        this.getRadians = function () {
+
+        };
+    }
+
     function Camera() {
         var position = new Position(10000, 10000);
         var scale = 1;
         var activeObject = null;
         var MIN_SCALE = 0.3;
         var MAX_SCALE = 8;
+        var SCALE_INCREMENT = 0.1;
 
         this.setPosition = function (pX, pY) {
             position.set(pX, pY);
@@ -189,25 +218,31 @@
             return position.getY();
         };
 
+        this.getScale = function () {
+            return scale;
+        };
+
+        var setScale = function (pScale) {
+            if (pScale >= MIN_SCALE && pScale <= MAX_SCALE) {
+                scale = pScale;
+            }
+        };
+
         this.update = function (ticks) {
             if (activeObject) {
                 position.setPosition(activeObject.getPosition().getX(),
                     activeObject.getPosition().getY());
             }
+
+            if (inputManager.mouseWheel > 0) {
+                setScale(this.getScale() + SCALE_INCREMENT);
+            } else if (inputManager.mouseWheel < 0) {
+                setScale(this.getScale() - SCALE_INCREMENT);
+            }
         };
 
         this.setActiveObject = function (pActiveObject) {
             activeObject = pActiveObject;
-        };
-
-        this.getScale = function () {
-            return scale;
-        };
-
-        this.setScale = function (pScale) {
-            if (pScale >= MIN_SCALE && pScale <= MAX_SCALE) {
-                scale = pScale;
-            }
         };
 
         this.doTransform = function () {
@@ -239,7 +274,7 @@
         };
 
         this.render = function () {
-            var context = graphicsManager.getCanvas().getContext('2d');
+            var context = graphicsManager.getCanvas().getContext("2d");
             context.fillStyle = '#FFFFFF';
             context.font = '10pt sans-serif';
             context.textBaseline = 'top';
@@ -271,7 +306,7 @@
 
         this.render = function () {
             if (visible) {
-                var context = graphicsManager.getCanvas().getContext('2d');
+                var context = graphicsManager.getCanvas().getContext("2d");
 
                 context.fillStyle = '#FFFFFF';
                 context.strokeStyle = '#FFFFFF';
@@ -336,7 +371,7 @@
         this.render = function () {
             var halfScreenWidth = (graphicsManager.getCanvas().width / 2) / camera.getScale();
             var halfScreenHeight = (graphicsManager.getCanvas().height / 2) / camera.getScale();
-            var context = graphicsManager.getCanvas().getContext('2d');
+            var context = graphicsManager.getCanvas().getContext("2d");
 
             context.strokeStyle = '#00FF00';
             context.globalAlpha = 0.75;
@@ -362,11 +397,16 @@
     var grid = new Grid();
 
     function Ship() {
+        var MAX_VELOCITY = 5000;
+        var ACCELERATION = 5;
+
         var position = new Position(10000, 10000);
         position.setPosition(0, 0);
 
+        var heading = new Heading();
+
         this.render = function () {
-            var context = graphicsManager.getCanvas().getContext('2d');
+            var context = graphicsManager.getCanvas().getContext("2d");
             context.fillStyle = '#FF0000';
 
             context.beginPath();
@@ -415,10 +455,13 @@
     };
 
     var update = function (ticks) {
+
         userInterface.update(ticks);
 
         ship.update(ticks);
         camera.update(ticks);
+
+        inputManager.reset();
     };
 
     var vSyncWait = (function (callback) {
@@ -506,13 +549,25 @@
     };
 
     var onMouseWheel = function (event) {
-        var delta = event.wheelDelta;
-        console.log(delta);
-        if (delta > 0) {
-            camera.setScale(camera.getScale() + 0.1);
-        } else {
-            camera.setScale(camera.getScale() - 0.1);
+        if (event.wheelDelta) {
+            if (event.wheelDelta > 0) {
+                inputManager.mouseWheel = 1;
+                //camera.setScale(camera.getScale() + 0.1);
+            } else {
+                inputManager.mouseWheel = -1;
+                //camera.setScale(camera.getScale() - 0.1);
+            }
         }
+
+        // firefox impl
+        /*if (event.detail) {
+            if (event.detail > 0) {
+                camera.setScale(camera.getScale + 0.1);
+
+            } else {
+                camera.setScale(camera.getScale - 0.1);
+            }
+        }*/
     };
 
     var initializeEventListeners = function () {
@@ -522,6 +577,7 @@
         graphicsManager.getCanvas().addEventListener("mousedown", onMouseDown, false);
         graphicsManager.getCanvas().addEventListener("mouseup", onMouseUp, false);
         graphicsManager.getCanvas().addEventListener("mousewheel", onMouseWheel, false);
+        graphicsManager.getCanvas().addEventListener("DOMMouseScroll", onMouseWheel, false);
 
         document.addEventListener("keydown", onKeyDown, false);
         document.addEventListener("keyup", onKeyUp, false);
@@ -535,9 +591,9 @@
         camera.setActiveObject(ship);
 
         //audioManager.playMusic("screamandshout");
-        //audioManager.playMusic("palace");
+        audioManager.playMusic("palace");
         //audioManager.playMusic("fortune");
-        audioManager.playMusic("monday");
+        //audioManager.playMusic("monday");
 
 
         gameLoop(true);
