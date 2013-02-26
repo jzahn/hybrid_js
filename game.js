@@ -67,8 +67,8 @@
         };
 
         this.playMusic = function (pathMinusExtension) {
-            mp3Source.setAttribute("src", pathMinusExtension + ".mp3");
-            oggSource.setAttribute("src", pathMinusExtension + ".ogg");
+            mp3Source.setAttribute("src", "resources/music/" + pathMinusExtension + ".mp3");
+            oggSource.setAttribute("src", "resources/music/" + pathMinusExtension + ".ogg");
             audio.play();
         };
 
@@ -175,7 +175,7 @@
         var scale = 1;
         var activeObject = null;
         var MIN_SCALE = 0.3;
-        var MAX_SCALE = 5;
+        var MAX_SCALE = 8;
 
         this.setPosition = function (pX, pY) {
             position.set(pX, pY);
@@ -214,8 +214,8 @@
             var context = graphicsManager.getCanvas().getContext("2d");
             var halfScreenWidth = graphicsManager.getCanvas().width / 2;
             var halfScreenHeight = graphicsManager.getCanvas().height / 2;
-            context.translate(halfScreenWidth - position.getX(),
-                -halfScreenHeight - position.getY());
+            context.translate(halfScreenWidth - position.getX() * scale,
+                -halfScreenHeight - position.getY() * scale);
             context.scale(scale, scale);
         };
     }
@@ -334,25 +334,25 @@
 
     function Grid() {
         this.render = function () {
-            var halfScreenWidth = (graphicsManager.getCanvas().width / 2);// / camera.getScale();
-            var halfScreenHeight = (graphicsManager.getCanvas().height / 2);// / camera.getScale();
+            var halfScreenWidth = (graphicsManager.getCanvas().width / 2) / camera.getScale();
+            var halfScreenHeight = (graphicsManager.getCanvas().height / 2) / camera.getScale();
             var context = graphicsManager.getCanvas().getContext('2d');
 
             context.strokeStyle = '#00FF00';
             context.globalAlpha = 0.75;
 
             context.beginPath();
-            context.moveTo(graphicsManager.fixPixelCoord(-halfScreenWidth),
+            context.moveTo(graphicsManager.fixPixelCoord(camera.getX() - halfScreenWidth),
                 graphicsManager.fixPixelCoord(0));
-            context.lineTo(graphicsManager.fixPixelCoord(halfScreenWidth),
+            context.lineTo(graphicsManager.fixPixelCoord(camera.getX() + halfScreenWidth),
                 graphicsManager.fixPixelCoord(0));
             context.stroke();
 
             context.beginPath();
             context.moveTo(graphicsManager.fixPixelCoord(0),
-                graphicsManager.fixPixelCoord(halfScreenHeight));
+                graphicsManager.fixPixelCoord(camera.getY() + halfScreenHeight));
             context.lineTo(graphicsManager.fixPixelCoord(0),
-                graphicsManager.fixPixelCoord(-halfScreenHeight));
+                graphicsManager.fixPixelCoord(camera.getY() - halfScreenHeight));
             context.stroke();
 
             context.globalAlpha = 1;
@@ -533,7 +533,12 @@
         initializeEventListeners();
 
         camera.setActiveObject(ship);
-        audioManager.playMusic("screamandshout");
+
+        //audioManager.playMusic("screamandshout");
+        //audioManager.playMusic("palace");
+        //audioManager.playMusic("fortune");
+        audioManager.playMusic("monday");
+
 
         gameLoop(true);
     };
