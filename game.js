@@ -1,23 +1,11 @@
-/*jslint vars: true, browser: true, devel: true, plusplus: true*/
-
+/*jslint browser: true, devel: true, debug: false, plusplus: true, unparam: true, vars: true */
 (function () {
     "use strict";
 
     function GraphicsManager() {
         var canvas = null;
 
-        this.resizeCanvas = function () {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
-
-        this.clearCanvas = function () {
-            var originalCanvasWidth = canvas.width;
-            canvas.width = 0;
-            canvas.width = originalCanvasWidth;
-        };
-
-        this.initialize = function () {
+        this.initialize = function initialize() {
             canvas = document.createElement("canvas");
             canvas.className = "nopad nocursor";
             document.body.appendChild(canvas);
@@ -25,20 +13,31 @@
             this.resizeCanvas();
         };
 
-        this.getCanvas = function () {
+        this.resizeCanvas = function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+
+        this.clearCanvas = function clearCanvas() {
+            var originalCanvasWidth = canvas.width;
+            canvas.width = 0;
+            canvas.width = originalCanvasWidth;
+        };
+
+        this.getCanvas = function getCanvas() {
             return canvas;
         };
 
-        this.fixPixelCoord = function (pCoord) {
+        this.fixPixelCoord = function fixPixelCoord(pCoord) {
             return Math.round(pCoord) + 0.5;
         };
 
-        this.setGameTransform = function () {
+        this.setGameTransform = function setGameTransform() {
             var context = canvas.getContext("2d");
             context.setTransform(1, 0, 0, -1, 0, 0);
         };
 
-        this.setUiTransform = function () {
+        this.setUiTransform = function setUiTransform() {
             var context = canvas.getContext("2d");
             context.setTransform(1, 0, 0, 1, 0, 0);
         };
@@ -51,7 +50,7 @@
         var mp3Source = null;
         var oggSource = null;
 
-        this.initialize = function () {
+        this.initialize = function initialize() {
             audio = document.createElement("audio");
             audio.setAttribute("loop", true);
 
@@ -66,13 +65,15 @@
             audio.appendChild(oggSource);
         };
 
-        this.playMusic = function (pathMinusExtension) {
-            mp3Source.setAttribute("src", "resources/music/" + pathMinusExtension + ".mp3");
-            oggSource.setAttribute("src", "resources/music/" + pathMinusExtension + ".ogg");
+        this.playMusic = function playMusic(pathMinusExtension) {
+            mp3Source.setAttribute("src", "resources/music/" +
+                pathMinusExtension + ".mp3");
+            oggSource.setAttribute("src", "resources/music/" +
+                pathMinusExtension + ".ogg");
             audio.play();
         };
 
-        this.getAudio = function () {
+        this.getAudio = function getAudio() {
             return audio;
         };
     }
@@ -106,7 +107,7 @@
         this.mouse3 = false;
         this.mouseWheel = 0;
 
-        this.reset = function () {
+        this.reset = function reset() {
             this.mouseWheel = 0;
         };
     }
@@ -120,7 +121,7 @@
         var lastTicks = 0;
         var ticksThisIteration = 0;
 
-        this.tick = function () {
+        this.tick = function tick() {
             lastTicks = ticks;
             ticks = Date.now();
             ticksThisIteration = ticks - lastTicks;
@@ -140,7 +141,7 @@
         var MAX_Y = pMaxY;
         var x = 0, y = 0;
 
-        var boundsCheck = function () {
+        var boundsCheck = function boundsCheck() {
             var diff = 0;
 
             if (x > MAX_X) {
@@ -160,15 +161,15 @@
             }
         };
 
-        this.getX = function () {
+        this.getX = function getX() {
             return x;
         };
 
-        this.getY = function () {
+        this.getY = function getY() {
             return y;
         };
 
-        this.setPosition = function (pX, pY) {
+        this.setPosition = function setPosition(pX, pY) {
             x = pX;
             y = pY;
             boundsCheck();
@@ -176,25 +177,27 @@
     }
 
     function Heading() {
-        var angle = 0;
+        var degrees = 0;
 
-        var boundsCheck = function () {
-            if (angle < 0 || angle >= 360) {
-                angle %= 360;
+        var boundsCheck = function boundsCheck() {
+            if (degrees < 0 || degrees >= 360) {
+                degrees %= 360;
             }
         };
 
-        this.getHeading = function () {
-            return angle;
+        this.getHeading = function getHeading() {
+            // degrees is negated because of world matrix -y
+            return -degrees;
         };
 
-        this.setHeading = function (pAngle) {
-            angle = pAngle;
+        this.setHeading = function setHeading(pDegrees) {
+            // degrees is negated because of world matrix -y
+            degrees = -pDegrees;
             boundsCheck();
         };
 
-        this.getRadians = function () {
-
+        this.getRadians = function getRadians() {
+            return degrees * Math.PI / 180;
         };
     }
 
@@ -204,48 +207,48 @@
         var activeObject = null;
         var MIN_SCALE = 0.3;
         var MAX_SCALE = 8;
-        var SCALE_INCREMENT = 0.1;
+        var SCALE_INCREMENT = 0.9;
 
-        this.setPosition = function (pX, pY) {
+        this.setPosition = function setPosition(pX, pY) {
             position.set(pX, pY);
         };
 
-        this.getX = function () {
+        this.getX = function getX() {
             return position.getX();
         };
 
-        this.getY = function () {
+        this.getY = function getY() {
             return position.getY();
         };
 
-        this.getScale = function () {
+        this.getScale = function getScale() {
             return scale;
         };
 
-        var setScale = function (pScale) {
+        var setScale = function setScale(pScale) {
             if (pScale >= MIN_SCALE && pScale <= MAX_SCALE) {
                 scale = pScale;
             }
         };
 
-        this.update = function (ticks) {
+        this.update = function update(ticks) {
             if (activeObject) {
                 position.setPosition(activeObject.getPosition().getX(),
                     activeObject.getPosition().getY());
             }
 
             if (inputManager.mouseWheel > 0) {
-                setScale(this.getScale() + SCALE_INCREMENT);
+                setScale(this.getScale() / SCALE_INCREMENT);
             } else if (inputManager.mouseWheel < 0) {
-                setScale(this.getScale() - SCALE_INCREMENT);
+                setScale(this.getScale() * SCALE_INCREMENT);
             }
         };
 
-        this.setActiveObject = function (pActiveObject) {
+        this.setActiveObject = function setActiveObject(pActiveObject) {
             activeObject = pActiveObject;
         };
 
-        this.doTransform = function () {
+        this.doTransform = function doTransform() {
             var context = graphicsManager.getCanvas().getContext("2d");
             var halfScreenWidth = graphicsManager.getCanvas().width / 2;
             var halfScreenHeight = graphicsManager.getCanvas().height / 2;
@@ -265,23 +268,25 @@
         var fps = 0;
         var frames = 0;
 
-        this.setPosition = function (x, y) {
+        this.setPosition = function setPosition(x, y) {
             position.setPosition(x, y);
         };
 
-        this.setVisible = function (visibility) {
+        this.setVisible = function setVisible(visibility) {
             visible = visibility;
         };
 
-        this.render = function () {
-            var context = graphicsManager.getCanvas().getContext("2d");
-            context.fillStyle = '#FFFFFF';
-            context.font = '10pt sans-serif';
-            context.textBaseline = 'top';
-            context.fillText("fps: " + fps, position.getX(), position.getY());
+        this.render = function render() {
+            if (visible) {
+                var context = graphicsManager.getCanvas().getContext("2d");
+                context.fillStyle = '#FFFFFF';
+                context.font = '10pt sans-serif';
+                context.textBaseline = 'top';
+                context.fillText("fps: " + fps, position.getX(), position.getY());
+            }
         };
 
-        this.update = function (ticks) {
+        this.update = function update(ticks) {
             tickSum += ticks;
             frames++;
             if (tickSum >= 1000) {
@@ -296,15 +301,15 @@
         var position = new Position(10000, 10000);
         var visible = false;
 
-        this.setPosition = function (x, y) {
+        this.setPosition = function setPosition(x, y) {
             position.setPosition(x, y);
         };
 
-        this.setVisible = function (visibility) {
+        this.setVisible = function setVisible(visibility) {
             visible = visibility;
         };
 
-        this.render = function () {
+        this.render = function render() {
             if (visible) {
                 var context = graphicsManager.getCanvas().getContext("2d");
 
@@ -368,14 +373,19 @@
     var userInterface = new UserInterface();
 
     function Grid() {
+        var GRID_SIZE = 100;
+
         this.render = function () {
             var halfScreenWidth = (graphicsManager.getCanvas().width / 2) / camera.getScale();
             var halfScreenHeight = (graphicsManager.getCanvas().height / 2) / camera.getScale();
             var context = graphicsManager.getCanvas().getContext("2d");
 
-            context.strokeStyle = '#00FF00';
-            context.globalAlpha = 0.75;
+            context.save();
 
+            context.strokeStyle = '#00FF00';
+            context.globalAlpha = 1;
+
+            // draw centerlines
             context.beginPath();
             context.moveTo(graphicsManager.fixPixelCoord(camera.getX() - halfScreenWidth),
                 graphicsManager.fixPixelCoord(0));
@@ -390,7 +400,58 @@
                 graphicsManager.fixPixelCoord(camera.getY() - halfScreenHeight));
             context.stroke();
 
-            context.globalAlpha = 1;
+            context.globalAlpha = 0.35;
+
+            // draw verts along x positive
+            var i;
+            for (i = GRID_SIZE;
+                    i < halfScreenWidth + camera.getX();
+                    i += GRID_SIZE) {
+                context.beginPath();
+                context.moveTo(graphicsManager.fixPixelCoord(i),
+                    graphicsManager.fixPixelCoord(camera.getY() + halfScreenHeight));
+                context.lineTo(graphicsManager.fixPixelCoord(i),
+                    graphicsManager.fixPixelCoord(camera.getY() - halfScreenHeight));
+                context.stroke();
+            }
+
+            // draw verts along x negative
+            for (i = GRID_SIZE;
+                    i < halfScreenWidth - camera.getX();
+                    i += GRID_SIZE) {
+                context.beginPath();
+                context.moveTo(graphicsManager.fixPixelCoord(-i),
+                    graphicsManager.fixPixelCoord(camera.getY() + halfScreenHeight));
+                context.lineTo(graphicsManager.fixPixelCoord(-i),
+                    graphicsManager.fixPixelCoord(camera.getY() - halfScreenHeight));
+                context.stroke();
+            }
+
+            // draw horz along y positive
+            for (i = GRID_SIZE;
+                    i < halfScreenHeight + camera.getY();
+                    i += GRID_SIZE) {
+                context.beginPath();
+                context.moveTo(graphicsManager.fixPixelCoord(camera.getX() - halfScreenWidth),
+                    graphicsManager.fixPixelCoord(i));
+                context.lineTo(graphicsManager.fixPixelCoord(camera.getX() + halfScreenWidth),
+                    graphicsManager.fixPixelCoord(i));
+                context.stroke();
+            }
+
+            // draw horz along y negative
+            for (i = GRID_SIZE;
+                    i < halfScreenHeight - camera.getY();
+                    i += GRID_SIZE) {
+                context.beginPath();
+                context.moveTo(graphicsManager.fixPixelCoord(camera.getX() - halfScreenWidth),
+                    graphicsManager.fixPixelCoord(-i));
+                context.lineTo(graphicsManager.fixPixelCoord(camera.getX() + halfScreenWidth),
+                    graphicsManager.fixPixelCoord(-i));
+                context.stroke();
+            }
+
+            context.restore();
         };
     }
 
@@ -399,39 +460,84 @@
     function Ship() {
         var MAX_VELOCITY = 5000;
         var ACCELERATION = 5;
+        var TURN_RATE = 1;
+
+        var velocity = 0;
 
         var position = new Position(10000, 10000);
         position.setPosition(0, 0);
 
         var heading = new Heading();
+        var headingChanged = false;
+        var headingSin = 0, headingCos = 0;
+
+        var doTrig = function () {
+            headingSin = Math.sin(heading.getRadians());
+            headingCos = Math.cos(heading.getRadians());
+            headingChanged = false;
+        };
+
+        doTrig();
+
+        var calculateDeltaX = function (ticks) {
+            // something screwy with - vel
+            return headingSin * -velocity / (1000 / ticks);
+        };
+
+        var calculateDeltaY = function (ticks) {
+            // something screwy with - vel
+            return headingCos * -velocity / (1000 / ticks);
+        };
 
         this.render = function () {
             var context = graphicsManager.getCanvas().getContext("2d");
+            context.save();
+
+            context.translate(position.getX(), position.getY());
+            context.rotate(heading.getRadians());
+
             context.fillStyle = '#FF0000';
 
             context.beginPath();
-            context.moveTo(graphicsManager.fixPixelCoord(position.getX()),
-                graphicsManager.fixPixelCoord(position.getY() + 10));
-            context.lineTo(graphicsManager.fixPixelCoord(position.getX() + 5),
-                graphicsManager.fixPixelCoord(position.getY() - 5));
-            context.lineTo(graphicsManager.fixPixelCoord(position.getX() - 5),
-                graphicsManager.fixPixelCoord(position.getY() - 5));
+            context.moveTo(graphicsManager.fixPixelCoord(0),
+                graphicsManager.fixPixelCoord(10));
+            context.lineTo(graphicsManager.fixPixelCoord(5),
+                graphicsManager.fixPixelCoord(-5));
+            context.lineTo(graphicsManager.fixPixelCoord(-5),
+                graphicsManager.fixPixelCoord(-5));
             context.fill();
+
+            context.restore();
+        };
+
+        var applyInput = function (ticks) {
+            if (inputManager.vk_w && velocity <= MAX_VELOCITY) {
+                velocity += ACCELERATION * (ticks / 16);
+            }
+            if (inputManager.vk_s && velocity > 0) {
+                velocity -= ACCELERATION * (ticks / 16);
+                if (velocity < ACCELERATION) {
+                    velocity = 0;
+                }
+            }
+            if (inputManager.vk_d) {
+                heading.setHeading(heading.getHeading() + (TURN_RATE * (ticks / 16)));
+                headingChanged = true;
+            }
+            if (inputManager.vk_a) {
+                heading.setHeading(heading.getHeading() - (TURN_RATE * (ticks / 16)));
+                headingChanged = true;
+            }
         };
 
         this.update = function (ticks) {
-            if (inputManager.vk_w) {
-                position.setPosition(position.getX(), position.getY() + 2 * (ticks / 16));
+            applyInput(ticks);
+            if (headingChanged) {
+                doTrig();
             }
-            if (inputManager.vk_s) {
-                position.setPosition(position.getX(), position.getY() - 2 * (ticks / 16));
-            }
-            if (inputManager.vk_d) {
-                position.setPosition(position.getX() + 2 * (ticks / 16), position.getY());
-            }
-            if (inputManager.vk_a) {
-                position.setPosition(position.getX() - 2 * (ticks / 16), position.getY());
-            }
+
+            position.setPosition(position.getX() + calculateDeltaX(ticks),
+                position.getY() - calculateDeltaY(ticks));
         };
 
         this.getPosition = function () {
@@ -552,22 +658,19 @@
         if (event.wheelDelta) {
             if (event.wheelDelta > 0) {
                 inputManager.mouseWheel = 1;
-                //camera.setScale(camera.getScale() + 0.1);
             } else {
                 inputManager.mouseWheel = -1;
-                //camera.setScale(camera.getScale() - 0.1);
             }
         }
 
-        // firefox impl
-        /*if (event.detail) {
+        // firefox/moz impl
+        if (event.detail) {
             if (event.detail > 0) {
-                camera.setScale(camera.getScale + 0.1);
-
+                inputManager.mouseWheel = -1;
             } else {
-                camera.setScale(camera.getScale - 0.1);
+                inputManager.mouseWheel = +1;
             }
-        }*/
+        }
     };
 
     var initializeEventListeners = function () {
@@ -577,7 +680,8 @@
         graphicsManager.getCanvas().addEventListener("mousedown", onMouseDown, false);
         graphicsManager.getCanvas().addEventListener("mouseup", onMouseUp, false);
         graphicsManager.getCanvas().addEventListener("mousewheel", onMouseWheel, false);
-        graphicsManager.getCanvas().addEventListener("DOMMouseScroll", onMouseWheel, false);
+
+        window.addEventListener("DOMMouseScroll", onMouseWheel, false);
 
         document.addEventListener("keydown", onKeyDown, false);
         document.addEventListener("keyup", onKeyUp, false);
@@ -591,9 +695,10 @@
         camera.setActiveObject(ship);
 
         //audioManager.playMusic("screamandshout");
-        audioManager.playMusic("palace");
-        //audioManager.playMusic("fortune");
+        //audioManager.playMusic("palace");
+        audioManager.playMusic("fortune");
         //audioManager.playMusic("monday");
+        //audioManager.playMusic("deadmau5");
 
 
         gameLoop(true);
