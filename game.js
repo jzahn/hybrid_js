@@ -1,9 +1,9 @@
 /*jslint browser: true, devel: true, debug: false, plusplus: true, unparam: true, vars: true */
-(function () {
+var HYBRID = (function () {
     "use strict";
 
     function GraphicsManager() {
-        var canvas = null;
+        var canvas;
 
         this.initialize = function initialize() {
             canvas = document.createElement("canvas");
@@ -46,20 +46,25 @@
     var graphicsManager = new GraphicsManager();
 
     function AudioManager() {
-        var audio = null;
-        var mp3Source = null;
-        var oggSource = null;
+        var audio;
+        var mp3Source;
+        var oggSource;
+
+        this.onended = function onended() {
+            console.log("audio.onended");
+        };
 
         this.initialize = function initialize() {
             audio = document.createElement("audio");
             audio.setAttribute("loop", true);
+            //audio.onended = onended;
+            audio.addEventListener('ended', audio.onended);
 
             mp3Source = document.createElement("source");
             mp3Source.setAttribute("type", "audio/mp3");
 
             oggSource = document.createElement("source");
             oggSource.setAttribute("type", "audio/ogg");
-
             document.body.appendChild(audio);
             audio.appendChild(mp3Source);
             audio.appendChild(oggSource);
@@ -79,6 +84,16 @@
     }
 
     var audioManager = new AudioManager();
+
+    function DeeJay() {
+        // plays looping sets
+        var setList = new Array();
+    }
+
+    function DeeJaySet() {
+        // a set of songs
+        var songList = new Array();
+    }
 
     function InputManager() {
         this.vk_w = false;
@@ -204,7 +219,7 @@
     function Camera() {
         var position = new Position(10000, 10000);
         var scale = 1;
-        var activeObject = null;
+        var activeObject;
         var MIN_SCALE = 0.3;
         var MAX_SCALE = 8;
         var SCALE_INCREMENT = 0.9;
@@ -480,13 +495,13 @@
         doTrig();
 
         var calculateDeltaX = function (ticks) {
-            // something screwy with - vel
-            return headingSin * -velocity / (1000 / ticks);
+            // something screwy with -
+            return -headingSin * velocity / (1000 / ticks);
         };
 
         var calculateDeltaY = function (ticks) {
-            // something screwy with - vel
-            return headingCos * -velocity / (1000 / ticks);
+            // something screwy with -
+            return -headingCos * velocity / (1000 / ticks);
         };
 
         this.render = function () {
@@ -648,10 +663,12 @@
 
     var onMouseDown = function (event) {
         console.log("mousedown");
+        event.preventDefault();
     };
 
     var onMouseUp = function (event) {
         console.log("mouseup");
+        event.preventDefault();
     };
 
     var onMouseWheel = function (event) {
@@ -696,9 +713,9 @@
 
         //audioManager.playMusic("screamandshout");
         //audioManager.playMusic("palace");
-        audioManager.playMusic("fortune");
+        //audioManager.playMusic("fortune");
         //audioManager.playMusic("monday");
-        //audioManager.playMusic("deadmau5");
+        audioManager.playMusic("deadmau5");
 
 
         gameLoop(true);
