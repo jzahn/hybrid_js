@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true, debug: false, plusplus: true, unparam: true, vars: true */
-var HYBRID = (function () {
+(function () {
     "use strict";
 
     function GraphicsManager() {
@@ -51,14 +51,12 @@ var HYBRID = (function () {
         var oggSource;
 
         this.onended = function onended() {
-            console.log("audio.onended");
+            console.log("audioManager.onended");
         };
 
         this.initialize = function initialize() {
             audio = document.createElement("audio");
             audio.setAttribute("loop", true);
-            //audio.onended = onended;
-            audio.addEventListener('ended', audio.onended);
 
             mp3Source = document.createElement("source");
             mp3Source.setAttribute("type", "audio/mp3");
@@ -68,6 +66,8 @@ var HYBRID = (function () {
             document.body.appendChild(audio);
             audio.appendChild(mp3Source);
             audio.appendChild(oggSource);
+
+            audio.addEventListener('ended', audioManager.onended);
         };
 
         this.playMusic = function playMusic(pathMinusExtension) {
@@ -87,12 +87,12 @@ var HYBRID = (function () {
 
     function DeeJay() {
         // plays looping sets
-        var setList = new Array();
+        var setList = [];
     }
 
     function DeeJaySet() {
         // a set of songs
-        var songList = new Array();
+        var songList = [];
     }
 
     function InputManager() {
