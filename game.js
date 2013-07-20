@@ -162,7 +162,8 @@
             if (x > MAX_X) {
                 diff = x - MAX_X;
                 x = -x + diff;
-            } else if (x < -MAX_X) {
+            } 
+            else if (x < -MAX_X) {
                 diff = -x - MAX_X;
                 x = -x - diff;
             }
@@ -170,7 +171,8 @@
             if (y > MAX_Y) {
                 diff = y - MAX_Y;
                 y = -y + diff;
-            } else if (y < -MAX_Y) {
+            } 
+            else if (y < -MAX_Y) {
                 diff = -y - MAX_Y;
                 y = -y - diff;
             }
@@ -218,11 +220,12 @@
 
     function Camera() {
         var position = new Position(10000, 10000);
+        //this.prototype = new Position(10000, 10000);
         var scale = 1;
         var activeObject;
         var MIN_SCALE = 0.3;
         var MAX_SCALE = 8;
-        var SCALE_INCREMENT = 0.9;
+        var SCALE_INCREMENT = 0.95;
 
         this.setPosition = function setPosition(pX, pY) {
             position.set(pX, pY);
@@ -254,7 +257,8 @@
 
             if (inputManager.mouseWheel > 0) {
                 setScale(this.getScale() / SCALE_INCREMENT);
-            } else if (inputManager.mouseWheel < 0) {
+            } 
+            else if (inputManager.mouseWheel < 0) {
                 setScale(this.getScale() * SCALE_INCREMENT);
             }
         };
@@ -277,6 +281,7 @@
 
     function PerformanceCounter() {
         var position = new Position(10000, 10000);
+        //this.prototype = new Position(10000, 10000);
         position.setPosition(10, 10);
         var visible = true;
         var tickSum = 0;
@@ -314,6 +319,7 @@
 
     function Cursor() {
         var position = new Position(10000, 10000);
+        //this.prototype = new Position(10000, 10000);
         var visible = false;
 
         this.setPosition = function setPosition(x, y) {
@@ -603,7 +609,8 @@
     var doWait = function (callback, vSync) {
         if (vSync) {
             vSyncWait(callback);
-        } else {
+        } 
+        else {
             noVSyncWait(callback);
         }
     };
@@ -638,11 +645,14 @@
         console.log("keydown: " + event.keyCode);
         if (event.keyCode === 87) {
             inputManager.vk_w = true;
-        } else if (event.keyCode === 65) {
+        } 
+        else if (event.keyCode === 65) {
             inputManager.vk_a = true;
-        } else if (event.keyCode === 68) {
+        } 
+        else if (event.keyCode === 68) {
             inputManager.vk_d = true;
-        } else if (event.keyCode === 83) {
+        } 
+        else if (event.keyCode === 83) {
             inputManager.vk_s = true;
         }
     };
@@ -652,11 +662,14 @@
 
         if (event.keyCode === 87) {
             inputManager.vk_w = false;
-        } else if (event.keyCode === 65) {
+        } 
+        else if (event.keyCode === 65) {
             inputManager.vk_a = false;
-        } else if (event.keyCode === 68) {
+        } 
+        else if (event.keyCode === 68) {
             inputManager.vk_d = false;
-        } else if (event.keyCode === 83) {
+        } 
+        else if (event.keyCode === 83) {
             inputManager.vk_s = false;
         }
     };
@@ -675,7 +688,8 @@
         if (event.wheelDelta) {
             if (event.wheelDelta > 0) {
                 inputManager.mouseWheel = 1;
-            } else {
+            } 
+            else {
                 inputManager.mouseWheel = -1;
             }
         }
@@ -684,7 +698,8 @@
         if (event.detail) {
             if (event.detail > 0) {
                 inputManager.mouseWheel = -1;
-            } else {
+            } 
+            else {
                 inputManager.mouseWheel = +1;
             }
         }
