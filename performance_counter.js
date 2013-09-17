@@ -20,10 +20,12 @@ var HYBRID = (function (hybrid) {
         this.render = function render() {
             if (visible) {
                 var context = graphicsManager.getCanvas().getContext("2d");
+                context.save();
                 context.fillStyle = '#FFFFFF';
                 context.font = '10pt sans-serif';
                 context.textBaseline = 'top';
                 context.fillText("fps: " + fps, position.getX(), position.getY());
+                context.restore();
             }
         };
 

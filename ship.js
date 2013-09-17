@@ -55,21 +55,23 @@ var HYBRID = (function (hybrid) {
         };
 
         var applyInput = function (ticks) {
+            var ticksMultiplier = ticks / 16;
+
             if (inputManager.vk_w && velocity <= MAX_VELOCITY) {
-                velocity += ACCELERATION * (ticks / 16);
+                velocity += ACCELERATION * (ticksMultiplier);
             }
             if (inputManager.vk_s && velocity > 0) {
-                velocity -= ACCELERATION * (ticks / 16);
+                velocity -= ACCELERATION * (ticksMultiplier);
                 if (velocity < ACCELERATION) {
                     velocity = 0;
                 }
             }
             if (inputManager.vk_d) {
-                heading.setHeading(heading.getHeading() + (TURN_RATE * (ticks / 16)));
+                heading.setHeading(heading.getHeading() + (TURN_RATE * (ticksMultiplier)));
                 headingChanged = true;
             }
             if (inputManager.vk_a) {
-                heading.setHeading(heading.getHeading() - (TURN_RATE * (ticks / 16)));
+                heading.setHeading(heading.getHeading() - (TURN_RATE * (ticksMultiplier)));
                 headingChanged = true;
             }
         };

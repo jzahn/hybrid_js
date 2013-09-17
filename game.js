@@ -10,6 +10,7 @@ var HYBRID = (function (hybrid, document) {
     var userInterface = new hybrid.UserInterface(graphicsManager);
     var grid = new hybrid.Grid(graphicsManager, camera);
     var ship = new hybrid.Ship(graphicsManager, inputManager);
+    var subPea = new hybrid.SubPea(graphicsManager, inputManager, ship)
 
     var render = function () {
         graphicsManager.clearCanvas();
@@ -18,6 +19,7 @@ var HYBRID = (function (hybrid, document) {
         camera.doTransform();
         grid.render();
         ship.render();
+        subPea.render();
 
         graphicsManager.setUiTransform();
 
@@ -29,6 +31,7 @@ var HYBRID = (function (hybrid, document) {
         userInterface.update(ticks);
 
         ship.update(ticks);
+        subPea.update(ticks);
         camera.update(ticks);
 
         inputManager.reset();
@@ -120,11 +123,13 @@ var HYBRID = (function (hybrid, document) {
     var onMouseDown = function (event) {
         console.log("mousedown");
         event.preventDefault();
+        inputManager.mouse1 = true;
     };
 
     var onMouseUp = function (event) {
         console.log("mouseup");
         event.preventDefault();
+        inputManager.mouse1 = false;
     };
 
     var onMouseWheel = function (event) {
@@ -171,9 +176,9 @@ var HYBRID = (function (hybrid, document) {
 
         //audioManager.playMusic("screamandshout");
         //audioManager.playMusic("palace");
-        //audioManager.playMusic("fortune");
+        audioManager.playMusic("fortune");
         //audioManager.playMusic("monday");
-        audioManager.playMusic("deadmau5");
+        //audioManager.playMusic("deadmau5");
 
 
         gameLoop(true);
