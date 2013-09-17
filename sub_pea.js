@@ -1,18 +1,20 @@
 var HYBRID = (function (hybrid) {
 	"use strict";
 
-	hybrid.SubPea = function SubPea(graphicsManager, inputManager, ship) {
+	hybrid.SubPea = function SubPea(graphicsManager, inputManager, camera, ship) {
 		var active = false;
 		var position = new hybrid.Position(10000, 10000);
-		position.setPosition(10, 10);
 
 		var LIFETIME = 3000;
 		var timeActive = 0;
 
+		var SIZE = 2;
+
 		this.update = function  update(ticks) {
-			if (inputManager.mouse1) {
+			if (inputManager.mouse1 && !active) {
 				active = true;
 				timeActive = 0;
+				position.setPosition(ship.getPosition().getX(), ship.getPosition().getY());
 			}
 			else {
 				timeActive += ticks;
@@ -32,7 +34,10 @@ var HYBRID = (function (hybrid) {
             context.globalAlpha = 1;
 
 			if (active) {
-				context.fillRect(position.getX(), position.getY(), 1, 1);
+				var halfSize = SIZE / 2;
+
+				context.fillRect(graphicsManager.fixPixelCoord(position.getX()) - halfSize,
+					graphicsManager.fixPixelCoord(position.getY()) - halfSize, SIZE, SIZE);
 			}
 
 			context.restore();

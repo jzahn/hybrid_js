@@ -10,7 +10,7 @@ var HYBRID = (function (hybrid, document) {
     var userInterface = new hybrid.UserInterface(graphicsManager);
     var grid = new hybrid.Grid(graphicsManager, camera);
     var ship = new hybrid.Ship(graphicsManager, inputManager);
-    var subPea = new hybrid.SubPea(graphicsManager, inputManager, ship)
+    var subPea = new hybrid.SubPea(graphicsManager, inputManager, camera, ship)
 
     var render = function () {
         graphicsManager.clearCanvas();
@@ -22,7 +22,6 @@ var HYBRID = (function (hybrid, document) {
         subPea.render();
 
         graphicsManager.setUiTransform();
-
         userInterface.render();
     };
 
