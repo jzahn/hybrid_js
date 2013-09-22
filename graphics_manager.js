@@ -28,6 +28,10 @@ var HYBRID = (function (hybrid) {
         };
 
         this.fixPixelCoord = function fixPixelCoord(pCoord) {
+            return pCoord; // TODO remove references to this function;
+        };
+
+        this.fixPixelUICoord = function fixPixelUICoord(pCoord) {
             return Math.round(pCoord) + 0.5;
         };
 
@@ -40,6 +44,7 @@ var HYBRID = (function (hybrid) {
             var context = canvas.getContext("2d");
             context.setTransform(1, 0, 0, 1, 0, 0);
         };
+
     }
 
     return hybrid;

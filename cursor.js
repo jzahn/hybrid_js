@@ -24,31 +24,31 @@ var HYBRID = (function (hybrid) {
                 context.fillRect(position.getX(), position.getY(), 1, 1);
 
                 context.beginPath();
-                context.moveTo(graphicsManager.fixPixelCoord(position.getX()),
-                    graphicsManager.fixPixelCoord(position.getY() + 3));
-                context.lineTo(graphicsManager.fixPixelCoord(position.getX()),
-                    graphicsManager.fixPixelCoord(position.getY() + 7));
+                context.moveTo(graphicsManager.fixPixelUICoord(position.getX()),
+                    graphicsManager.fixPixelUICoord(position.getY() + 3));
+                context.lineTo(graphicsManager.fixPixelUICoord(position.getX()),
+                    graphicsManager.fixPixelUICoord(position.getY() + 7));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(graphicsManager.fixPixelCoord(position.getX()),
-                    graphicsManager.fixPixelCoord(position.getY() - 3));
-                context.lineTo(graphicsManager.fixPixelCoord(position.getX()),
-                    graphicsManager.fixPixelCoord(position.getY() - 7));
+                context.moveTo(graphicsManager.fixPixelUICoord(position.getX()),
+                    graphicsManager.fixPixelUICoord(position.getY() - 3));
+                context.lineTo(graphicsManager.fixPixelUICoord(position.getX()),
+                    graphicsManager.fixPixelUICoord(position.getY() - 7));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(graphicsManager.fixPixelCoord(position.getX() + 3),
-                    graphicsManager.fixPixelCoord(position.getY()));
-                context.lineTo(graphicsManager.fixPixelCoord(position.getX() + 7),
-                    graphicsManager.fixPixelCoord(position.getY()));
+                context.moveTo(graphicsManager.fixPixelUICoord(position.getX() + 3),
+                    graphicsManager.fixPixelUICoord(position.getY()));
+                context.lineTo(graphicsManager.fixPixelUICoord(position.getX() + 7),
+                    graphicsManager.fixPixelUICoord(position.getY()));
                 context.stroke();
 
                 context.beginPath();
-                context.moveTo(graphicsManager.fixPixelCoord(position.getX() - 3),
-                    graphicsManager.fixPixelCoord(position.getY()));
-                context.lineTo(graphicsManager.fixPixelCoord(position.getX() - 7),
-                    graphicsManager.fixPixelCoord(position.getY()));
+                context.moveTo(graphicsManager.fixPixelUICoord(position.getX() - 3),
+                    graphicsManager.fixPixelUICoord(position.getY()));
+                context.lineTo(graphicsManager.fixPixelUICoord(position.getX() - 7),
+                    graphicsManager.fixPixelUICoord(position.getY()));
                 context.stroke();
 
                 context.globalAlpha = 1;

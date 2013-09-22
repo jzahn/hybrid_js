@@ -1,7 +1,7 @@
 var HYBRID = (function (hybrid) {
 	"use strict";
 
-	hybrid.SubPea = function SubPea(graphicsManager, inputManager, camera, ship) {
+	hybrid.SubPea = function SubPea(graphicsManager, inputManager, ship) {
 		var active = false;
 		var position = new hybrid.Position(10000, 10000);
 
@@ -36,8 +36,8 @@ var HYBRID = (function (hybrid) {
 			if (active) {
 				var halfSize = SIZE / 2;
 
-				context.fillRect(graphicsManager.fixPixelCoord(position.getX()) - halfSize,
-					graphicsManager.fixPixelCoord(position.getY()) - halfSize, SIZE, SIZE);
+				context.fillRect(graphicsManager.fixPixelCoord(position.getX() - halfSize),
+					graphicsManager.fixPixelCoord(position.getY() - halfSize), SIZE, SIZE);
 			}
 
 			context.restore();

@@ -1,7 +1,6 @@
 var HYBRID = (function (hybrid) {
 	"use strict";
 
-
 	hybrid.UserInterface = function UserInterface(graphicsManager) {
         var cursor = new hybrid.Cursor(graphicsManager);
         var performanceCounter = new hybrid.PerformanceCounter(graphicsManager);

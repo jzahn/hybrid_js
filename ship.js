@@ -15,6 +15,8 @@ var HYBRID = (function (hybrid) {
         var headingChanged = false;
         var headingSin = 0, headingCos = 0;
 
+        var subPea = new hybrid.SubPea(graphicsManager, inputManager, this);
+
         var doTrig = function () {
             headingSin = Math.sin(heading.getRadians());
             headingCos = Math.cos(heading.getRadians());
@@ -52,26 +54,28 @@ var HYBRID = (function (hybrid) {
             context.fill();
 
             context.restore();
+
+            subPea.render();
         };
 
         var applyInput = function (ticks) {
             var ticksMultiplier = ticks / 16;
 
             if (inputManager.vk_w && velocity <= MAX_VELOCITY) {
-                velocity += ACCELERATION * (ticksMultiplier);
+                velocity += ACCELERATION * ticksMultiplier;
             }
             if (inputManager.vk_s && velocity > 0) {
-                velocity -= ACCELERATION * (ticksMultiplier);
+                velocity -= ACCELERATION * ticksMultiplier;
                 if (velocity < ACCELERATION) {
                     velocity = 0;
                 }
             }
             if (inputManager.vk_d) {
-                heading.setHeading(heading.getHeading() + (TURN_RATE * (ticksMultiplier)));
+                heading.setHeading(heading.getHeading() + (TURN_RATE * ticksMultiplier));
                 headingChanged = true;
             }
             if (inputManager.vk_a) {
-                heading.setHeading(heading.getHeading() - (TURN_RATE * (ticksMultiplier)));
+                heading.setHeading(heading.getHeading() - (TURN_RATE * ticksMultiplier));
                 headingChanged = true;
             }
         };
@@ -84,6 +88,8 @@ var HYBRID = (function (hybrid) {
 
             position.setPosition(position.getX() + calculateDeltaX(ticks),
                 position.getY() - calculateDeltaY(ticks));
+
+            subPea.update(ticks);
         };
 
         this.getPosition = function () {

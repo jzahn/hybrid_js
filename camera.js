@@ -3,7 +3,6 @@ var HYBRID = (function (hybrid) {
 
 	hybrid.Camera = function Camera(graphicsManager, inputManager) {
         var position = new hybrid.Position(10000, 10000);
-        //this.prototype = new Position(10000, 10000);
         var scale = 1;
         var activeObject;
         var MIN_SCALE = 0.3;
@@ -58,6 +57,21 @@ var HYBRID = (function (hybrid) {
                 -halfScreenHeight - position.getY() * scale);
             context.scale(scale, scale);
         };
+
+        this.getUIPosition = function getUIPosition(worldPosition) {
+            // do math
+            // TODO
+            var uiPosition = undefined;
+            return uiPosition;
+        }
+
+        this.getWorldPosition = function getWorldPosition(uiPosition) {
+            
+            var x = uiPosition.getX() + position.getX();
+            var y = uiPosition.getY() - position.getY();
+
+            return {x: x, y:y}
+        }
     }
 
     return hybrid;

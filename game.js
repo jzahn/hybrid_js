@@ -1,5 +1,4 @@
-/*jslint browser: true, devel: true, debug: false, plusplus: true, unparam: true, vars: true */
-var HYBRID = (function (hybrid, document) {
+var HYBRID = (function (hybrid, window, document, console) {
     "use strict";
 
     var graphicsManager = new hybrid.GraphicsManager();
@@ -10,27 +9,24 @@ var HYBRID = (function (hybrid, document) {
     var userInterface = new hybrid.UserInterface(graphicsManager);
     var grid = new hybrid.Grid(graphicsManager, camera);
     var ship = new hybrid.Ship(graphicsManager, inputManager);
-    var subPea = new hybrid.SubPea(graphicsManager, inputManager, camera, ship)
 
-    var render = function () {
+    var render = function render() {
         graphicsManager.clearCanvas();
 
         graphicsManager.setGameTransform();
         camera.doTransform();
         grid.render();
         ship.render();
-        subPea.render();
 
         graphicsManager.setUiTransform();
         userInterface.render();
     };
 
-    var update = function (ticks) {
+    var update = function update(ticks) {
 
         userInterface.update(ticks);
 
         ship.update(ticks);
-        subPea.update(ticks);
         camera.update(ticks);
 
         inputManager.reset();
@@ -47,11 +43,11 @@ var HYBRID = (function (hybrid, document) {
             };
     }());
 
-    var noVSyncWait = function (callback) {
+    var noVSyncWait = function noVSyncWait(callback) {
         window.setTimeout(callback, 1);
     };
 
-    var doWait = function (callback, vSync) {
+    var doWait = function doWait(callback, vSync) {
         if (vSync) {
             vSyncWait(callback);
         } 
@@ -60,34 +56,34 @@ var HYBRID = (function (hybrid, document) {
         }
     };
 
-    var gameLoop = function (vSync) {
+    var gameLoop = function gameLoop(vSync) {
         doWait(gameLoop, vSync);
         update(timer.tick());
         render();
     };
 
-    window.onresize = function () {
+    window.onresize = function onresize() {
         graphicsManager.resizeCanvas();
     };
 
-    document.oncontextmenu = function () {
+    document.oncontextmenu = function oncontextmenu() {
         return false;
     };
 
-    var onMouseMove = function (event) {
+    var onMouseMove = function onMouseMove(event) {
         userInterface.getCursor().setPosition(event.clientX, event.clientY);
     };
 
-    var onMouseOut = function () {
+    var onMouseOut = function onMouseOut() {
         userInterface.getCursor().setVisible(false);
     };
 
-    var onMouseOver = function () {
+    var onMouseOver = function onMouseOver() {
         userInterface.getCursor().setVisible(true);
     };
 
-    var onKeyDown = function (event) {
-        console.log("keydown: " + event.keyCode);
+    var onKeyDown = function onKeyDown(event) {
+        //console.log("keydown: " + event.keyCode);
         if (event.keyCode === 87) {
             inputManager.vk_w = true;
         } 
@@ -102,8 +98,8 @@ var HYBRID = (function (hybrid, document) {
         }
     };
 
-    var onKeyUp = function (event) {
-        console.log("keyup: " + event.keyCode);
+    var onKeyUp = function onKeyUp(event) {
+        //console.log("keyup: " + event.keyCode);
 
         if (event.keyCode === 87) {
             inputManager.vk_w = false;
@@ -119,19 +115,19 @@ var HYBRID = (function (hybrid, document) {
         }
     };
 
-    var onMouseDown = function (event) {
-        console.log("mousedown");
+    var onMouseDown = function onMouseDown(event) {
+        //console.log("mousedown");
         event.preventDefault();
         inputManager.mouse1 = true;
     };
 
-    var onMouseUp = function (event) {
-        console.log("mouseup");
+    var onMouseUp = function onMouseUp(event) {
+        //console.log("mouseup");
         event.preventDefault();
         inputManager.mouse1 = false;
     };
 
-    var onMouseWheel = function (event) {
+    var onMouseWheel = function onMouseWheel(event) {
         if (event.wheelDelta) {
             if (event.wheelDelta > 0) {
                 inputManager.mouseWheel = 1;
@@ -152,7 +148,7 @@ var HYBRID = (function (hybrid, document) {
         }
     };
 
-    var initializeEventListeners = function () {
+    var initializeEventListeners = function initializeEventListeners() {
         graphicsManager.getCanvas().addEventListener("mousemove", onMouseMove, false);
         graphicsManager.getCanvas().addEventListener("mouseout", onMouseOut, false);
         graphicsManager.getCanvas().addEventListener("mouseover", onMouseOver, false);
@@ -166,7 +162,7 @@ var HYBRID = (function (hybrid, document) {
         document.addEventListener("keyup", onKeyUp, false);
     };
 
-    var initializeGameLoop = function () {
+    var initializeGameLoop = function initializeGameLoop() {
         graphicsManager.initialize();
         audioManager.initialize();
         initializeEventListeners();
@@ -175,7 +171,7 @@ var HYBRID = (function (hybrid, document) {
 
         //audioManager.playMusic("screamandshout");
         //audioManager.playMusic("palace");
-        audioManager.playMusic("fortune");
+        //audioManager.playMusic("fortune");
         //audioManager.playMusic("monday");
         //audioManager.playMusic("deadmau5");
 
@@ -187,19 +183,4 @@ var HYBRID = (function (hybrid, document) {
 
     return hybrid;
 
-}(HYBRID || {}, document));
-
-
-
-
-/*function DeeJay() {
-        // plays looping sets
-        var setList = [];
-    }
-
-    function DeeJaySet() {
-        // a set of songs
-        var songList = [];
-    }*/
-
-    
+}(HYBRID || {}, window, document, console));
