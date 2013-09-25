@@ -71,7 +71,13 @@ var HYBRID = (function (hybrid, window, document, console) {
     };
 
     var onMouseMove = function onMouseMove(event) {
-        userInterface.getCursor().setPosition(event.clientX, event.clientY);
+        inputManager.mouseX = event.clientX;
+        inputManager.mouseY = event.clientY;
+        inputManager.mouseWorldX = camera.getWorldX(inputManager.mouseX);
+        inputManager.mouseWorldY = camera.getWorldY(inputManager.mouseY);
+
+        // TODO wrap this up into the normal update loop
+        userInterface.getCursor().setPosition(inputManager.mouseX, inputManager.mouseY);
     };
 
     var onMouseOut = function onMouseOut() {
@@ -171,7 +177,7 @@ var HYBRID = (function (hybrid, window, document, console) {
 
         //audioManager.playMusic("screamandshout");
         //audioManager.playMusic("palace");
-        //audioManager.playMusic("fortune");
+        audioManager.playMusic("fortune");
         //audioManager.playMusic("monday");
         //audioManager.playMusic("deadmau5");
 

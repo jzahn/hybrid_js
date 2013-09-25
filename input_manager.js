@@ -27,6 +27,10 @@ var HYBRID = (function (hybrid) {
         this.mouse2 = false;
         this.mouse3 = false;
         this.mouseWheel = 0;
+        this.mouseX = 0;
+        this.mouseY = 0;
+        this.mouseWorldX = 0;
+        this.mouseWorldY = 0;
 
         this.reset = function reset() {
             this.mouseWheel = 0;

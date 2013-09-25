@@ -41,6 +41,12 @@ var HYBRID = (function (hybrid) {
             y = pY;
             boundsCheck();
         };
+
+        this.getHeading = function(pPosition) {
+            var thetaRadians = Math.atan2(x - pPosition.getX(), y - pPosition.getY());
+            var thetaDegrees = (thetaRadians + Math.PI) * 360.0 / (2.0 * Math.PI);
+            return thetaDegrees
+        };
     }
 
     return hybrid;

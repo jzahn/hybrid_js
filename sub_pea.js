@@ -14,7 +14,9 @@ var HYBRID = (function (hybrid) {
 			if (inputManager.mouse1 && !active) {
 				active = true;
 				timeActive = 0;
-				position.setPosition(ship.getPosition().getX(), ship.getPosition().getY());
+				//position.setPosition(ship.getPosition().getX(), ship.getPosition().getY());
+				position.setPosition(inputManager.mouseWorldX, inputManager.mouseWorldY);
+				console.log("Shots fired at: " + inputManager.mouseWorldX + ", " + inputManager.mouseWorldY);
 			}
 			else {
 				timeActive += ticks;

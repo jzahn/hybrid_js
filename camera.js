@@ -65,12 +65,12 @@ var HYBRID = (function (hybrid) {
             return uiPosition;
         }
 
-        this.getWorldPosition = function getWorldPosition(uiPosition) {
-            
-            var x = uiPosition.getX() + position.getX();
-            var y = uiPosition.getY() - position.getY();
+        this.getWorldX = function getWorldX(uiX) {
+            return (position.getX() + uiX - (graphicsManager.getCanvas().width / 2)) / scale;
+        }
 
-            return {x: x, y:y}
+        this.getWorldY = function getWorldY(uiY) {
+            return (position.getY() - uiY + (graphicsManager.getCanvas().height / 2)) / scale;
         }
     }
 
