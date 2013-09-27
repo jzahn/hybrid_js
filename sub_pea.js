@@ -25,7 +25,7 @@ var HYBRID = (function (hybrid) {
 					timeActive = 0;
 				}
 			}
-		}
+		};
 
 		this.render = function render() {
 			var context = graphicsManager.getCanvas().getContext("2d");
@@ -43,7 +43,7 @@ var HYBRID = (function (hybrid) {
 			}
 
 			context.restore();
-		}
+		};
 	}
 
 	return hybrid;
